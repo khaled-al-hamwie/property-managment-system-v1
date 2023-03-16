@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
+import { User } from "src/modules/users/user.entity";
 import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from "../constants";
 import { databaseConfig } from "./database.config";
 
@@ -21,8 +22,10 @@ export const databaseProviders = [
 					config = databaseConfig.development;
 			}
 			const sequelize = new Sequelize(config);
-			sequelize.addModels(["models goes here"]);
-			await sequelize.sync();
+			sequelize.addModels([User]);
+			User.removeAttribute("createdAt");
+			User.removeAttribute("updatedAt");
+			await sequelize.sync({ logging: false });
 			return sequelize;
 		},
 	},
