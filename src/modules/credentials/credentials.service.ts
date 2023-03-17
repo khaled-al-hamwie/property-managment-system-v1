@@ -9,7 +9,8 @@ export class CredentialsService {
 		@Inject(CREDENTIAL_REPOSITORY)
 		private readonly credential: typeof Credential
 	) {}
-	async create(credentialDto: credentialDto) {
-		return await this.credential.create(credentialDto);
+	async create(credentials: credentialDto) {
+		console.log(credentials);
+		await this.credential.create(credentials);
 	}
 }
