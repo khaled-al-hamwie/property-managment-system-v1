@@ -1,4 +1,5 @@
 import { Sequelize } from "sequelize-typescript";
+import { Credential } from "src/modules/credentials/credential.entity";
 import { User } from "src/modules/users/user.entity";
 import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from "../constants";
 import { databaseConfig } from "./database.config";
@@ -22,7 +23,10 @@ export const databaseProviders = [
 					config = databaseConfig.development;
 			}
 			const sequelize = new Sequelize(config);
-			sequelize.addModels([User]);
+			sequelize.addModels([Credential, User]);
+			Credential.removeAttribute("createdAt");
+			Credential.removeAttribute("updatedAt");
+
 			User.removeAttribute("createdAt");
 			User.removeAttribute("updatedAt");
 			await sequelize.sync({ logging: false });
