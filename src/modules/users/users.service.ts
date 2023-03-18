@@ -2,8 +2,10 @@ import {
 	Inject,
 	Injectable,
 	InternalServerErrorException,
+	NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { NotFoundError } from "rxjs";
 import { UserDto } from "./dto/user.dto";
 import { User } from "./user.entity";
 
@@ -17,5 +19,9 @@ export class UsersService {
 		} catch (error) {
 			throw new InternalServerErrorException();
 		}
+	}
+
+	async find(id: number): Promise<User> {
+		return await this.UserModel.findByPk(id);
 	}
 }

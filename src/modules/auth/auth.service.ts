@@ -31,7 +31,15 @@ export class AuthService {
 		return "done";
 	}
 
-	// async validateUser() {
-
-	// }
+	async validateUser(user_name: string, password: string) {
+		let credential_attributes = {
+			user_name,
+			password,
+		};
+		const credential = await this.credential.findByUserName(
+			credential_attributes
+		);
+		if (credential) return credential;
+		return false;
+	}
 }
