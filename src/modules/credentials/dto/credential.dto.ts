@@ -3,12 +3,3 @@ export class credentialDto {
 	email: string;
 	password: string;
 }
-
-export class credentialEmailDto {
-	email: string;
-	password: string;
-}
-export class credentialUserNameDto {
-	user_name: string;
-	password: string;
-}
