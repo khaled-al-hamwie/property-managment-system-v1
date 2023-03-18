@@ -7,7 +7,8 @@ import { InjectModel } from "@nestjs/sequelize";
 import { compare, hash } from "bcryptjs";
 import { UsersService } from "../users/users.service";
 import { Credential } from "./credential.entity";
-import { credentialDto, credentialUserNameDto } from "./dto/credential.dto";
+import { credentialDto } from "./dto/credential.dto";
+import { CredentialUsernameLog } from "./interfaces/credential-log.interface";
 
 @Injectable()
 export class CredentialsService {
@@ -47,17 +48,16 @@ export class CredentialsService {
 		}
 	}
 
-	async findByUserName({ password, user_name }: credentialUserNameDto) {
+	async verefiyByUserName({
+		password,
+		user_name,
+	}: CredentialUsernameLog): Promise<Credential> {
 		const credential = await this.CredentialModel.findOne({
 			where: { user_name },
 		});
-		if (!user_name) return false;
-		try {
-			let hashed = await compare(password, credential.password);
-			if (!hashed) return false;
-			return await this.UsersService.find(credential.credential_id);
-		} catch (error) {
-			return false;
-		}
+		if (!user_name) return null;
+		let hashed = await compare(password, credential.password);
+		if (!hashed) return null;
+		return credential;
 	}
 }
