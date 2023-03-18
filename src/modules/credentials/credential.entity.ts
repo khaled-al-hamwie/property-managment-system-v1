@@ -2,11 +2,13 @@ import {
 	Column,
 	CreatedAt,
 	DataType,
+	HasOne,
 	Model,
 	PrimaryKey,
 	Sequelize,
 	Table,
 } from "sequelize-typescript";
+import { User } from "../users/user.entity";
 import {
 	CredentialAttributes,
 	CredentialCreationAttributes,
@@ -42,4 +44,7 @@ export class Credential extends Model<
 		allowNull: false,
 	})
 	password: string;
+
+	@HasOne(() => User)
+	players: User[];
 }

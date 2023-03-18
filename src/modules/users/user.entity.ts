@@ -1,27 +1,32 @@
-import { userInfo } from "os";
 import {
+	BelongsTo,
 	Column,
-	CreatedAt,
 	DataType,
+	ForeignKey,
 	Model,
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
+import { Credential } from "../credentials/credential.entity";
+import {
+	UserAttributes,
+	UserCreationAttributes,
+} from "./interfaces/user.interface";
 
 @Table
-export class User extends Model<User> {
+export class User extends Model<UserAttributes, UserCreationAttributes> {
 	@PrimaryKey
 	@Column({
 		autoIncrement: true,
 	})
 	user_id: number;
 
+	@ForeignKey(() => Credential)
 	@Column({
-		type: DataType.STRING(45),
+		type: DataType.INTEGER,
 		allowNull: false,
-		unique: true,
 	})
-	user_name: string;
+	credential_id: number;
 
 	@Column({
 		type: DataType.STRING(45),
@@ -58,4 +63,7 @@ export class User extends Model<User> {
 		allowNull: true,
 	})
 	image: string;
+
+	@BelongsTo(() => Credential)
+	credential: Credential;
 }
