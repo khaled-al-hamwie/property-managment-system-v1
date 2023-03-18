@@ -12,10 +12,15 @@ export class AuthService {
 	) {}
 	async register(body: registerDto) {
 		let credentials: credentialDto = {
+			user_name: body.user_name,
 			email: body.email,
 			password: body.password,
 		};
-		console.log(credentials);
-		await this.credential.create(credentials);
+		let credential = await this.credential.create(credentials);
+		console.log(credential);
 	}
+
+	// async validateUser() {
+
+	// }
 }

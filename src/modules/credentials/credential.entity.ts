@@ -24,6 +24,13 @@ export class Credential extends Model<
 	credential_id: number;
 
 	@Column({
+		type: DataType.STRING(45),
+		allowNull: false,
+		unique: true,
+	})
+	user_name: string;
+
+	@Column({
 		type: DataType.STRING(245),
 		allowNull: false,
 		unique: true,
