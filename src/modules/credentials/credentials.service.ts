@@ -1,15 +1,22 @@
-import { Inject, Injectable } from "@nestjs/common";
-import { CREDENTIAL_REPOSITORY } from "src/core/constants";
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
 import { Credential } from "./credential.entity";
 import { credentialDto } from "./dto/credential.dto";
 
 @Injectable()
 export class CredentialsService {
 	constructor(
-		@Inject(CREDENTIAL_REPOSITORY)
-		private readonly credential: typeof Credential
+		@InjectModel(Credential)
+		private CredentialModel: typeof Credential
 	) {}
-	async create(credentials: credentialDto) {
-		return await this.credential.create<Credential>(credentials);
+	async create({ email, password }: credentialDto) {
+		// check if email exist
+		// hash the password
+
+		let credential: credentialDto = {
+			email: email,
+			password,
+		};
+		return await this.CredentialModel.create();
 	}
 }

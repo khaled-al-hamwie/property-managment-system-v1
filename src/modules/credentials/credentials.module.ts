@@ -1,9 +1,11 @@
 import { Module } from "@nestjs/common";
-import { credentialsProvider } from "./credentials.provider";
+import { SequelizeModule } from "@nestjs/sequelize";
+import { Credential } from "./credential.entity";
 import { CredentialsService } from "./credentials.service";
 
 @Module({
-	providers: [...credentialsProvider, CredentialsService],
+	imports: [SequelizeModule.forFeature([Credential])],
+	providers: [CredentialsService],
 	exports: [CredentialsService],
 })
 export class CredentialsModule {}
