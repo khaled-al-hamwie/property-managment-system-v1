@@ -10,7 +10,6 @@ export class CredentialsService {
 		private readonly credential: typeof Credential
 	) {}
 	async create(credentials: credentialDto) {
-		console.log(credentials);
-		await this.credential.create(credentials);
+		return await this.credential.create<Credential>(credentials);
 	}
 }
