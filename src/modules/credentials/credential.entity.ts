@@ -46,5 +46,5 @@ export class Credential extends Model<
 	password: string;
 
 	@HasOne(() => User)
-	players: User[];
+	users: User[];
 }
