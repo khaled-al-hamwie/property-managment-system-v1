@@ -1,6 +1,9 @@
 import { DynamicModule } from "@nestjs/common";
 import { SequelizeModule, SequelizeModuleOptions } from "@nestjs/sequelize";
+import { City } from "src/modules/cities/city.entity";
+import { Country } from "src/modules/countries/country.entity";
 import { Credential } from "src/modules/credentials/credential.entity";
+import { Location } from "src/modules/locations/location.entity";
 import { User } from "src/modules/users/user.entity";
 import { DEVELOPMENT, PRODUCTION, TEST } from "../constants";
 import { databaseConfig } from "./database.config";
@@ -21,5 +24,5 @@ switch (process.env.NODE_ENV) {
 }
 export const databaseProvider: DynamicModule = SequelizeModule.forRoot({
 	...config,
-	models: [Credential, User],
+	models: [Credential, User, Country, City, Location],
 });
