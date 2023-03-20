@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { countriesController } from "./countries.controller";
+import { SequelizeModule } from "@nestjs/sequelize";
 import { CountriesService } from "./countries.service";
+import { Country } from "./country.entity";
 
 @Module({
-	controllers: [countriesController],
+	imports: [SequelizeModule.forFeature([Country])],
 	providers: [CountriesService],
 })
 export class CountriesModule {}

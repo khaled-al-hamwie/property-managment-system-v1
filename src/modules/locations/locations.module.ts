@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
-import { LocationsController } from "./locations.controller";
+import { SequelizeModule } from "@nestjs/sequelize";
+import { Location } from "./location.entity";
 import { LocationsService } from "./locations.service";
 @Module({
-	controllers: [LocationsController],
+	imports: [SequelizeModule.forFeature([Location])],
 	providers: [LocationsService],
 })
 export class LocationsModule {}
