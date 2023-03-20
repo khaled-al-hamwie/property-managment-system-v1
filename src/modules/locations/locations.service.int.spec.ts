@@ -11,16 +11,16 @@ describe("location service int", () => {
 	beforeEach(async () => {
 		const moduleRef = await Test.createTestingModule({
 			imports: [
-				SequelizeModule.forRoot(databaseConfig.test),
-				LocationsModule,
+				// SequelizeModule.forRoot(databaseConfig.test),
+				// LocationsModule,
 			],
 			providers: [
 				LocationsService,
 				// // getModelToken(Location),
-				// {
-				// 	provide: getModelToken(Location),
-				// 	useExisting: getModelToken(Location),
-				// },
+				{
+					provide: getModelToken(Location),
+					useValue: {},
+				},
 			],
 		}).compile();
 		service = moduleRef.get<LocationsService>(LocationsService);
@@ -28,6 +28,7 @@ describe("location service int", () => {
 
 	describe("defined", () => {
 		it("service is defined", () => {
+			console.log(service);
 			expect(service).toBeDefined;
 		});
 	});

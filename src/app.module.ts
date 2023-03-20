@@ -5,6 +5,7 @@ import { AuthModule } from "./modules/auth/auth.module";
 import { CitiesModule } from "./modules/cities/cities.module";
 import { CountriesModule } from "./modules/countries/countries.module";
 import { CredentialsModule } from "./modules/credentials/credentials.module";
+import { PropertyModule } from "./modules/property/property.module";
 import { UsersModule } from "./modules/users/users.module";
 
 @Module({
@@ -12,6 +13,7 @@ import { UsersModule } from "./modules/users/users.module";
 		ConfigModule.forRoot({ isGlobal: true }),
 		databaseProvider,
 		UsersModule,
+		PropertyModule,
 		CredentialsModule,
 		AuthModule,
 		CitiesModule,

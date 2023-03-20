@@ -5,5 +5,6 @@ import { LocationsService } from "./locations.service";
 @Module({
 	imports: [SequelizeModule.forFeature([Location])],
 	providers: [LocationsService],
+	exports: [LocationsService],
 })
 export class LocationsModule {}

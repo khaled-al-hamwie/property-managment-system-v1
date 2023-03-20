@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { PropertyService } from "./property.service";
 
 @Controller("property")
@@ -7,5 +7,9 @@ export class PropertyController {
 	@Get()
 	getProperties() {
 		return this.propertyService.getProperties();
+	}
+	@Post()
+	createProperty(@Body() body: any) {
+		return this.propertyService.createProperty();
 	}
 }
