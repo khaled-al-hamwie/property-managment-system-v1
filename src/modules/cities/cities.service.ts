@@ -11,7 +11,7 @@ export class CitiesService {
 		return await this.CityModel.findAll();
 	}
 
-	async find(city_id: number) {
-		await this.CityModel.findByPk(city_id);
+	async find(city_id: number): Promise<City> {
+		return this.CityModel.findByPk(city_id);
 	}
 }

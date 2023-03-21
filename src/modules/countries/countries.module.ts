@@ -6,5 +6,6 @@ import { Country } from "./country.entity";
 @Module({
 	imports: [SequelizeModule.forFeature([Country])],
 	providers: [CountriesService],
+	exports: [CountriesService],
 })
 export class CountriesModule {}

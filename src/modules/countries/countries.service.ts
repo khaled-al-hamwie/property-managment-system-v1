@@ -11,7 +11,7 @@ export class CountriesService {
 		return await this.CountryModel.findAll();
 	}
 
-	async find(country_id: number) {
-		await this.CountryModel.findByPk(country_id);
+	async find(country_id: number): Promise<Country> {
+		return this.CountryModel.findByPk(country_id);
 	}
 }
