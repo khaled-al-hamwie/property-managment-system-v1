@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import {
+	ForbiddenException,
+	Injectable,
+	UnauthorizedException,
+} from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { AuthService } from "../auth.service";
@@ -19,7 +23,9 @@ export class LocalStrategy extends PassportStrategy(Strategy, "local") {
 			password
 		);
 		if (!result) {
-			throw new UnauthorizedException();
+			throw new ForbiddenException("credentials don't match", {
+				description: "Forbidden",
+			});
 		}
 		return result;
 	}
