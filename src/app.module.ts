@@ -7,6 +7,7 @@ import { CountriesModule } from "./modules/countries/countries.module";
 import { CredentialsModule } from "./modules/credentials/credentials.module";
 import { PropertyModule } from "./modules/property/property.module";
 import { UsersModule } from "./modules/users/users.module";
+import { PropertyTypesModule } from './modules/property-types/property-types.module';
 
 @Module({
 	imports: [
@@ -18,6 +19,7 @@ import { UsersModule } from "./modules/users/users.module";
 		AuthModule,
 		CitiesModule,
 		CountriesModule,
+		PropertyTypesModule,
 	],
 })
 export class AppModule {}
