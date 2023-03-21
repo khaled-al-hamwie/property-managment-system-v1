@@ -12,7 +12,6 @@ export const databaseConfig: IDatabaseConfig = {
 		port: Number(process.env.DB_PORT),
 		dialect: "mysql",
 		autoLoadModels: true,
-		logging: undefined,
 		define: {
 			timestamps: false,
 		},
