@@ -4,6 +4,8 @@ import { City } from "src/modules/cities/city.entity";
 import { Country } from "src/modules/countries/country.entity";
 import { Credential } from "src/modules/credentials/credential.entity";
 import { Location } from "src/modules/locations/location.entity";
+import { PropertyType } from "src/modules/property-types/property-type.entity";
+import { Property } from "src/modules/property/property.entity";
 import { User } from "src/modules/users/user.entity";
 import { DEVELOPMENT, PRODUCTION, TEST } from "../constants";
 import { databaseConfig } from "./database.config";
@@ -24,5 +26,5 @@ switch (process.env.NODE_ENV) {
 }
 export const databaseProvider: DynamicModule = SequelizeModule.forRoot({
 	...config,
-	models: [Credential, User, Country, City, Location],
+	models: [Credential, User, Country, City, Location, PropertyType, Property],
 });
