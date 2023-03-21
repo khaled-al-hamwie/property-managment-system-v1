@@ -9,6 +9,11 @@ export class PropertyTypesService {
 		private PropertyTypeModel: typeof PropertyType
 	) {}
 	async find(property_type_id: number): Promise<PropertyType> {
-		return this.PropertyTypeModel.findByPk(property_type_id);
+		return this.PropertyTypeModel.findOne({
+			where: {
+				property_type_id,
+			},
+			limit: 1,
+		});
 	}
 }
