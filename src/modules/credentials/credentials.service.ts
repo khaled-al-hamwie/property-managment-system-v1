@@ -55,7 +55,7 @@ export class CredentialsService {
 		const credential = await this.CredentialModel.findOne({
 			where: { user_name },
 		});
-		if (!user_name) return null;
+		if (!credential) return null;
 		let hashed = await compare(password, credential.password);
 		if (!hashed) return null;
 		return credential;
