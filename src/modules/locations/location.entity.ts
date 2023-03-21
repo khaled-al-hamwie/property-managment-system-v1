@@ -3,12 +3,14 @@ import {
 	Column,
 	DataType,
 	ForeignKey,
+	HasMany,
 	Model,
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
 import { City } from "../cities/city.entity";
 import { Country } from "../countries/country.entity";
+import { Property } from "../property/property.entity";
 import {
 	LocationAttributes,
 	LocationCreationAttributes,
@@ -57,4 +59,7 @@ export class Location extends Model<
 
 	@BelongsTo(() => City)
 	city: City;
+
+	@HasMany(() => Property)
+	properties: Property[];
 }

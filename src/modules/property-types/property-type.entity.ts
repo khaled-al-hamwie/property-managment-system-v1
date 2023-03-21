@@ -1,10 +1,12 @@
 import {
 	Column,
 	DataType,
+	HasMany,
 	Model,
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
+import { Property } from "../property/property.entity";
 import {
 	PropertyTypeAttributes,
 	PropertyTypeCreationAttributes,
@@ -27,4 +29,7 @@ export class PropertyType extends Model<
 		allowNull: false,
 	})
 	name: string;
+
+	@HasMany(() => Property)
+	properties: Property[];
 }
