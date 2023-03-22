@@ -4,13 +4,10 @@ import {
 	DefaultValuePipe,
 	Delete,
 	Get,
-	HttpStatus,
-	Param,
 	ParseIntPipe,
 	Patch,
 	Post,
 	Query,
-	Req,
 	UseGuards,
 } from "@nestjs/common";
 import { IdParam } from "src/core/decorator/id.decorator";

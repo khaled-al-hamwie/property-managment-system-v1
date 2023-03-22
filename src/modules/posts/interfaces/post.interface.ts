@@ -2,6 +2,7 @@ import { Optional } from "sequelize";
 
 export interface PostAttributes {
 	post_id: number;
+	owner_id: number;
 	property_id: number;
 	title: string;
 	description: string;
@@ -11,6 +12,7 @@ export interface PostAttributes {
 export interface PostCreationAttributes
 	extends Optional<PostAttributes, "post_id"> {
 	property_id: number;
+	owner_id: number;
 	title: string;
 	description: string;
 	price: number;
