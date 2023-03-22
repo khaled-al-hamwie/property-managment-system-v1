@@ -3,11 +3,13 @@ import {
 	Column,
 	DataType,
 	ForeignKey,
+	HasMany,
 	Model,
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
 import { Location } from "../locations/location.entity";
+import { Post } from "../posts/post.entity";
 import { PropertyType } from "../property-types/property-type.entity";
 import { User } from "../users/user.entity";
 import {
@@ -81,4 +83,7 @@ export class Property extends Model<
 
 	@BelongsTo(() => Location)
 	location: Location;
+
+	@HasMany(() => Post)
+	posts: Post[];
 }

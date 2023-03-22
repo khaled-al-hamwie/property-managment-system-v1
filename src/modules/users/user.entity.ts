@@ -9,6 +9,7 @@ import {
 	Table,
 } from "sequelize-typescript";
 import { Credential } from "../credentials/credential.entity";
+import { Post } from "../posts/post.entity";
 import { Property } from "../property/property.entity";
 import {
 	UserAttributes,
@@ -69,6 +70,9 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 	@BelongsTo(() => Credential)
 	credential: Credential;
 
-	@HasMany(() => Property)
+	@HasMany(() => Property, { onDelete: "CASCADE" })
 	properties: Property[];
+
+	@HasMany(() => Post, { onDelete: "CASCADE" })
+	posts: Post[];
 }
