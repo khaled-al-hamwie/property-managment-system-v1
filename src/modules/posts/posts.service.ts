@@ -28,4 +28,13 @@ export class PostsService {
 		if (post[0] == 0) throw new NotFoundException("post dosen't exists");
 		return "done";
 	}
+
+	async deletePost(body: PostUpdate) {
+		const post = await this.PostModule.destroy({
+			where: { post_id: body.post_id, owner_id: body.owner_id },
+			limit: 1,
+		});
+		if (post == 0) throw new NotFoundException("post dosen't exists");
+		return "done";
+	}
 }

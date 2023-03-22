@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	ParseIntPipe,
 	Patch,
 	Post,
@@ -34,5 +35,15 @@ export class PostsController {
 		post_id: number
 	) {
 		return this.postService.updatePost({ ...body, post_id, owner_id });
+	}
+
+	@UseGuards(JwtAuthGuard)
+	@Delete(":id")
+	deletePost(
+		@User("user_id") owner_id: number,
+		@IdParam(ParseIntPipe)
+		post_id: number
+	) {
+		return this.postService.deletePost({ post_id, owner_id });
 	}
 }
