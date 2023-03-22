@@ -1,11 +1,13 @@
 import {
 	BelongsTo,
 	Column,
+	CreatedAt,
 	DataType,
 	ForeignKey,
 	Model,
 	PrimaryKey,
 	Table,
+	UpdatedAt,
 } from "sequelize-typescript";
 import { Property } from "../property/property.entity";
 import { User } from "../users/user.entity";
@@ -54,6 +56,12 @@ export class Post extends Model<PostAttributes, PostCreationAttributes> {
 		allowNull: false,
 	})
 	price: string;
+
+	@CreatedAt
+	created_at: Date;
+
+	@UpdatedAt
+	updated_at: Date;
 
 	@BelongsTo(() => Property)
 	property: Property;
