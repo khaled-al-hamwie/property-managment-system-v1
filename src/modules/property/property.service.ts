@@ -93,7 +93,7 @@ export class PropertyService {
 			limit: 1,
 		});
 		if (!property) {
-			throw new NotFoundException();
+			throw new NotFoundException("property does't exists");
 		}
 		return property;
 	}

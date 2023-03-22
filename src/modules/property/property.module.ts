@@ -14,5 +14,6 @@ import { PropertyService } from "./property.service";
 	],
 	controllers: [PropertyController],
 	providers: [PropertyService],
+	exports: [PropertyService],
 })
 export class PropertyModule {}

@@ -57,10 +57,16 @@ export class Post extends Model<PostAttributes, PostCreationAttributes> {
 	})
 	price: string;
 
-	@CreatedAt
+	@Column({
+		type: DataType.DATE,
+		defaultValue: DataType.NOW,
+	})
 	created_at: Date;
 
-	@UpdatedAt
+	@Column({
+		type: DataType.DATE,
+		defaultValue: DataType.NOW,
+	})
 	updated_at: Date;
 
 	@BelongsTo(() => Property)
