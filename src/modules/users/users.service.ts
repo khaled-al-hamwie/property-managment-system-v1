@@ -21,7 +21,12 @@ export class UsersService {
 		}
 	}
 
-	async find(credential_id: number): Promise<User> {
+	async findByCredentialId(credential_id: number): Promise<User> {
 		return await this.UserModel.findOne({ where: { credential_id } });
+	}
+
+	async findByUserId(user_id: number): Promise<User> {
+		const user = await this.UserModel.findByPk(user_id);
+		return user;
 	}
 }

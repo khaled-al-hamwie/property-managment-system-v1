@@ -18,6 +18,7 @@ export class CredentialsService {
 		private UsersService: UsersService
 	) {}
 	async create({ email, password, user_name }: credentialDto) {
+		// # UPDATE make it in one query instead of two
 		let userWithSameEmail = await this.CredentialModel.findOne({
 			where: { email },
 		});
