@@ -45,6 +45,6 @@ export class Credential extends Model<
 	})
 	password: string;
 
-	@HasOne(() => User)
-	users: User[];
+	@HasOne(() => User, { onDelete: "CASCADE" })
+	user: User;
 }
