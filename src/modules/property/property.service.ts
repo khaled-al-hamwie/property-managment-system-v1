@@ -1,13 +1,20 @@
-import { ForbiddenException, Inject, Injectable } from "@nestjs/common";
+import {
+	ForbiddenException,
+	Inject,
+	Injectable,
+	NotFoundException,
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { CitiesService } from "../cities/cities.service";
 import { CountriesService } from "../countries/countries.service";
 import { LocationCreation } from "../locations/interfaces/location.entity.interface";
 import { LocationsService } from "../locations/locations.service";
 import { PropertyTypesService } from "../property-types/property-types.service";
-import { PropertyDto } from "./dto/property.dto";
+import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyCreate } from "./interfaces/property.create.interface";
+import { PropertyDelete } from "./interfaces/property.delete.interface";
 import { PropertyCreationAttributes } from "./interfaces/property.interface";
+import { PropertyUpdate } from "./interfaces/property.update.interface";
 import { Property } from "./property.entity";
 
 @Injectable()
@@ -61,5 +68,35 @@ export class PropertyService {
 		};
 		await this.PropertyModule.create(property_attributes);
 		return "";
+	}
+	async getProperty(
+		property_id: number,
+		owner_id: number
+	): Promise<Property> {
+		const property = await Property.findOne({
+			where: { property_id, owner_id },
+			limit: 1,
+		});
+		if (!property) {
+			throw new NotFoundException();
+		}
+		return property;
+	}
+	async updateProperty(body: PropertyUpdate) {
+		const property = await this.PropertyModule.update(body, {
+			where: { property_id: body.property_id, owner_id: body.owner_id },
+			limit: 1,
+		});
+		if (property[0] == 0) throw new NotFoundException();
+		return "done";
+	}
+
+	async deleteProperty(body: PropertyDelete) {
+		const property = await this.PropertyModule.destroy({
+			where: { property_id: body.property_id, owner_id: body.owner_id },
+			limit: 1,
+		});
+		if (property == 0) throw new NotFoundException();
+		return "done";
 	}
 }
