@@ -37,4 +37,7 @@ export const databaseProvider: DynamicModule = SequelizeModule.forRoot({
 		Property,
 		Post,
 	],
+	// sync: {
+	// 	force: true,
+	// },
 });
