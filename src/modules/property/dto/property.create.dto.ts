@@ -10,7 +10,7 @@ import {
 	Length,
 } from "class-validator";
 
-export class PropertyDto {
+export class PropertyCreateDto {
 	@IsInt()
 	property_type_id: number;
 
@@ -35,9 +35,10 @@ export class PropertyDto {
 		}
 	})
 	@Length(10, 500)
-	description?: string;
+	description: string;
 
-	images?: string[];
+	@IsOptional()
+	images: string[];
 
 	@IsInt()
 	country_id: number;
@@ -56,5 +57,5 @@ export class PropertyDto {
 
 	@IsOptional()
 	@IsUrl()
-	google_map_link?: string;
+	google_map_link: string;
 }
