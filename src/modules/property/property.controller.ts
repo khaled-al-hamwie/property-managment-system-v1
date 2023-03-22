@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	DefaultValuePipe,
 	Delete,
 	Get,
 	HttpStatus,
@@ -8,9 +9,11 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
+	Query,
 	Req,
 	UseGuards,
 } from "@nestjs/common";
+import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
 import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { PropertyCreateDto } from "./dto/property.create.dto";
@@ -21,10 +24,7 @@ import { PropertyService } from "./property.service";
 @Controller("property")
 export class PropertyController {
 	constructor(private propertyService: PropertyService) {}
-	@Get()
-	getProperties() {
-		return this.propertyService.getProperties();
-	}
+
 	@UseGuards(JwtAuthGuard)
 	@Post()
 	createProperty(
@@ -39,14 +39,22 @@ export class PropertyController {
 	}
 
 	@UseGuards(JwtAuthGuard)
+	@Get("/me")
+	getMyProperties(
+		@User("user_id") owner_id: number,
+		@Query("page", new DefaultValuePipe(5), ParseIntPipe) limit: number,
+		@Query("offset", new DefaultValuePipe(0), ParseIntPipe)
+		offset: number
+	) {
+		return this.propertyService.getMyProperties(owner_id, limit, offset);
+	}
+
+	@UseGuards(JwtAuthGuard)
 	@Patch(":id")
 	updateProperty(
 		@User("user_id") owner_id: number,
 		@Body() body: PropertyUpdateDto,
-		@Param(
-			"id",
-			new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-		)
+		@IdParam(ParseIntPipe)
 		property_id: number
 	) {
 		return this.propertyService.updateProperty({
@@ -60,11 +68,7 @@ export class PropertyController {
 	@Delete(":id")
 	deleteProperty(
 		@User("user_id") owner_id: number,
-		@Param(
-			"id",
-			new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE })
-		)
-		property_id: number
+		@IdParam(ParseIntPipe) property_id: number
 	) {
 		return this.propertyService.deleteProperty({ property_id, owner_id });
 	}

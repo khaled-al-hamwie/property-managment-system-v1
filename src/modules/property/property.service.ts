@@ -2,13 +2,16 @@ import {
 	ForbiddenException,
 	Inject,
 	Injectable,
+	NotAcceptableException,
 	NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { CitiesService } from "../cities/cities.service";
 import { CountriesService } from "../countries/countries.service";
 import { LocationCreation } from "../locations/interfaces/location.entity.interface";
+import { Location } from "../locations/location.entity";
 import { LocationsService } from "../locations/locations.service";
+import { PropertyType } from "../property-types/property-type.entity";
 import { PropertyTypesService } from "../property-types/property-types.service";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyCreate } from "./interfaces/property.create.interface";
@@ -24,8 +27,20 @@ export class PropertyService {
 		private Location: LocationsService,
 		private PropertyType: PropertyTypesService
 	) {}
-	getProperties() {
-		return "fjds;";
+	async getMyProperties(
+		owner_id: number,
+		limit: number = 5,
+		offset: number = 0
+	) {
+		if (limit <= 0 || offset < 0) {
+			throw new NotAcceptableException();
+		}
+		return this.PropertyModule.findAll({
+			where: { owner_id },
+			include: [PropertyType, Location],
+			offset,
+			limit,
+		});
 	}
 
 	async createProperty({
