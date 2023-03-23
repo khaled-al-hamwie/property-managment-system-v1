@@ -4,11 +4,13 @@ import {
 	CreatedAt,
 	DataType,
 	ForeignKey,
+	HasMany,
 	Model,
 	PrimaryKey,
 	Table,
 	UpdatedAt,
 } from "sequelize-typescript";
+import { Comment } from "../comments/entities/comment.entity";
 import { Property } from "../property/property.entity";
 import { User } from "../users/user.entity";
 import {
@@ -74,4 +76,7 @@ export class Post extends Model<PostAttributes, PostCreationAttributes> {
 
 	@BelongsTo(() => User)
 	owner: User;
+
+	@HasMany(() => Comment, { onDelete: "CASCADE" })
+	comments: Comment[];
 }

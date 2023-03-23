@@ -8,6 +8,7 @@ import {
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
+import { Comment } from "../comments/entities/comment.entity";
 import { Credential } from "../credentials/credential.entity";
 import { Post } from "../posts/post.entity";
 import { Property } from "../property/property.entity";
@@ -75,4 +76,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 
 	@HasMany(() => Post, { onDelete: "CASCADE" })
 	posts: Post[];
+
+	@HasMany(() => Comment)
+	comments: Comment[];
 }
