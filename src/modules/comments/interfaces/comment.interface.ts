@@ -4,7 +4,7 @@ export interface CommentAttributes {
 	comment_id: number;
 	owner_id: number;
 	post_id: number;
-	body: string;
+	description: string;
 }
 
 export interface CommentCreationAttributes
@@ -12,5 +12,5 @@ export interface CommentCreationAttributes
 	comment_id: number;
 	owner_id: number;
 	post_id: number;
-	body: string;
+	description: string;
 }

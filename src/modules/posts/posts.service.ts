@@ -37,4 +37,12 @@ export class PostsService {
 		if (post == 0) throw new NotFoundException("post dosen't exists");
 		return "done";
 	}
+
+	async findPost(post_id: number) {
+		const post = await this.PostModule.findByPk(post_id);
+		if (!post) {
+			throw new NotFoundException("post_id don't exist");
+		}
+		return post;
+	}
 }

@@ -4,9 +4,14 @@ import {
 	Delete,
 	Get,
 	Param,
+	ParseIntPipe,
 	Patch,
 	Post,
+	UseGuards,
 } from "@nestjs/common";
+import { IdParam } from "src/core/decorator/id.decorator";
+import { User } from "src/core/decorator/user.decorator";
+import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
 import { CommentsService } from "./comments.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
@@ -15,9 +20,18 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 export class CommentsController {
 	constructor(private readonly commentsService: CommentsService) {}
 
+	@UseGuards(JwtAuthGuard)
 	@Post()
-	create(@Body() createCommentDto: CreateCommentDto) {
-		return this.commentsService.create(createCommentDto);
+	create(
+		@User("user_id") user_id: number,
+		@Body() body: CreateCommentDto,
+		@IdParam("postId", ParseIntPipe) post_id
+	) {
+		return this.commentsService.create({
+			...body,
+			owner_id: user_id,
+			post_id,
+		});
 	}
 
 	@Get()
