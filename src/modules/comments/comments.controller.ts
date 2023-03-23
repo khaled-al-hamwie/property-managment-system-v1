@@ -25,7 +25,7 @@ export class CommentsController {
 	create(
 		@User("user_id") user_id: number,
 		@Body() body: CreateCommentDto,
-		@IdParam("postId", ParseIntPipe) post_id
+		@IdParam("postId", ParseIntPipe) post_id: number
 	) {
 		return this.commentsService.create({
 			...body,
@@ -35,7 +35,7 @@ export class CommentsController {
 	}
 
 	@Get()
-	findAll(@IdParam("postId", ParseIntPipe) post_id) {
+	findAll(@IdParam("postId", ParseIntPipe) post_id: number) {
 		return this.commentsService.findAll(post_id);
 	}
 
