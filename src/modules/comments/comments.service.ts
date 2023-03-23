@@ -17,12 +17,12 @@ export class CommentsService {
 		return "done";
 	}
 
-	findAll() {
-		return `This action returns all comments`;
-	}
-
-	findOne(id: number) {
-		return `This action returns a #${id} comment`;
+	async findAll(post_id: number) {
+		await this.postsService.findPost(post_id);
+		return this.CommentModule.findAll({
+			where: { post_id },
+			attributes: ["owner_id", "description"],
+		});
 	}
 
 	update(id: number, updateCommentDto: UpdateCommentDto) {

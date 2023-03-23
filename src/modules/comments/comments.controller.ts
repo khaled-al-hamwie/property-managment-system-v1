@@ -35,13 +35,8 @@ export class CommentsController {
 	}
 
 	@Get()
-	findAll() {
-		return this.commentsService.findAll();
-	}
-
-	@Get(":id")
-	findOne(@Param("id") id: string) {
-		return this.commentsService.findOne(+id);
+	findAll(@IdParam("postId", ParseIntPipe) post_id) {
+		return this.commentsService.findAll(post_id);
 	}
 
 	@Patch(":id")
