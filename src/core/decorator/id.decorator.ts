@@ -4,9 +4,11 @@ import {
 	NotAcceptableException,
 } from "@nestjs/common";
 export const IdParam = createParamDecorator(
-	(data: unknown, ctx: ExecutionContext) => {
+	(data: string, ctx: ExecutionContext) => {
 		const request = ctx.switchToHttp().getRequest();
-		const id = request.params.id;
+		let id = request.params;
+		if (data) id = id?.[data];
+		else id = request.params.id;
 		if (id <= 0) {
 			throw new NotAcceptableException();
 		}
