@@ -14,7 +14,7 @@ import { PostCreateDto } from "./dto/post.create.dto";
 import { PostUpdateDto } from "./dto/post.update.dto";
 import { PostsService } from "./posts.service";
 
-@Controller("post")
+@Controller("posts")
 export class PostsController {
 	constructor(private postService: PostsService) {}
 	@UseGuards(JwtAuthGuard)
