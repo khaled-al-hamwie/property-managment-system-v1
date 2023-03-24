@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	Get,
 	ParseIntPipe,
 	Patch,
 	Post,
@@ -35,6 +36,14 @@ export class PostsController {
 		post_id: number
 	) {
 		return this.postService.updatePost({ ...body, post_id, owner_id });
+	}
+
+	@Get(":id")
+	getPost(
+		@IdParam(ParseIntPipe)
+		post_id: number
+	) {
+		return this.postService.getPost(post_id);
 	}
 
 	@UseGuards(JwtAuthGuard)

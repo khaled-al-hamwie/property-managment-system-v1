@@ -20,6 +20,16 @@ export class PostsService {
 		return "done";
 	}
 
+	async getPost(post_id: number) {
+		const post = await this.PostModule.findByPk(post_id, {
+			limit: 1,
+			include: ["comments", "property"],
+		});
+		if (!post) {
+			throw new NotFoundException("post dosen't exists");
+		}
+		return post;
+	}
 	async updatePost(body: PostUpdate) {
 		const post = await this.PostModule.update(body, {
 			where: { post_id: body.post_id, owner_id: body.owner_id },
