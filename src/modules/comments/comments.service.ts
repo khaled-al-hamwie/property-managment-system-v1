@@ -33,13 +33,21 @@ export class CommentsService {
 				owner_id: body.user_id,
 				post_id: body.post_id,
 			},
+			limit: 1,
 		});
 		if (comment[0] == 0)
 			throw new NotFoundException("comment dosen't exists");
 		return "done";
 	}
 
-	remove(id: number) {
-		return `This action removes a #${id} comment`;
+	async remove(user_id: number, comment_id: number) {
+		const comment = await this.CommentModule.destroy({
+			where: { owner_id: user_id, comment_id },
+			limit: 1,
+		});
+		if (comment == 0) {
+			throw new NotFoundException("comment dosen't exists");
+		}
+		return "done";
 	}
 }

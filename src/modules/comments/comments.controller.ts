@@ -55,8 +55,12 @@ export class CommentsController {
 		});
 	}
 
+	@UseGuards(JwtAuthGuard)
 	@Delete(":id")
-	remove(@Param("id") id: string) {
-		return this.commentsService.remove(+id);
+	remove(
+		@User("user_id") user_id: number,
+		@IdParam("id", ParseIntPipe) comment_id: number
+	) {
+		return this.commentsService.remove(user_id, comment_id);
 	}
 }
