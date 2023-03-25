@@ -33,7 +33,7 @@ export class registerDto {
 			return value.trim();
 		}
 	})
-	@NotContains(" ", { message: "password should not contain a space" })
+	@NotContains(" ", { message: "user_name should not contain a space" })
 	@Length(3, 45)
 	user_name: string;
 
@@ -63,17 +63,17 @@ export class registerDto {
 		}
 	})
 	@Length(10, 245)
-	bio: string;
+	bio?: string;
 
 	@IsOptional()
 	@IsEmail()
-	contact_email: string;
+	contact_email?: string;
 
 	@IsOptional()
 	@IsPhoneNumber()
-	phone_number: string;
+	phone_number?: string;
 
 	@IsOptional()
 	@IsUrl()
-	image: string;
+	image?: string;
 }
