@@ -6,6 +6,7 @@ import {
 	ParseIntPipe,
 	Patch,
 	Post,
+	Query,
 	UseGuards,
 } from "@nestjs/common";
 import { IdParam } from "src/core/decorator/id.decorator";
@@ -25,6 +26,11 @@ export class PostsController {
 			...body,
 			owner_id,
 		});
+	}
+
+	@Get()
+	getPosts(@Query("search") search: string) {
+		return this.postService.getPosts(search);
 	}
 
 	@UseGuards(JwtAuthGuard)

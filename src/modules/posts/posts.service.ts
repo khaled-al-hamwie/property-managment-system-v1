@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Op } from "sequelize";
 import { PropertyService } from "../property/property.service";
 import { PostCreate } from "./interfaces/post.create.interface";
 import { PostUpdate } from "./interfaces/post.update.interface";
@@ -27,6 +28,17 @@ export class PostsService {
 		});
 		if (!post) {
 			throw new NotFoundException("post dosen't exists");
+		}
+		return post;
+	}
+	async getPosts(search: string | undefined) {
+		const post = await this.PostModule.findAll({
+			where: { title: { [Op.regexp]: search } },
+			limit: 10,
+			order: [["created_at", "DESC"]],
+		});
+		if (!post) {
+			throw new NotFoundException("posts dosen't exists");
 		}
 		return post;
 	}
