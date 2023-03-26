@@ -42,108 +42,105 @@ describe("register a user", () => {
 		await app.close();
 	});
 
-	describe("create user", () => {
-		it("should create", () => {
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect(201);
-		});
-		it("should not allow similar email ", () => {
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: "email you can't use this email",
-					error: "Forbidden",
-				});
-		});
-		it("should not allow similar userName ", () => {
-			registerBody.email = "test1@test.com";
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: "user_name you can't use this user_name",
-					error: "Forbidden",
-				});
-		});
-		it("should not allow user_name with space", () => {
-			registerBody.user_name = "fea f";
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: ["user_name should not contain a space"],
-					error: "Forbidden",
-				});
-		});
-		it("should not allow more than 3 user_name", () => {
-			registerBody.user_name = "      f    ";
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: [
-						"user_name must be longer than or equal to 3 characters",
-					],
-					error: "Forbidden",
-				});
-		});
-		it("should not allow more than 45 user_name", () => {
-			registerBody.user_name = "f    ".repeat(45);
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: [
-						"user_name must be shorter than or equal to 45 characters",
-					],
-					error: "Forbidden",
-				});
-		});
-		it("should not allow empty fist_name", () => {
-			registerBody.first_name = "";
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: [
-						"first_name must be longer than or equal to 3 characters",
-					],
-					error: "Forbidden",
-				});
-		});
-		it("should not allow empty last_name", () => {
-			registerBody.last_name = "";
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect({
-					statusCode: 403,
-					message: [
-						"last_name must be longer than or equal to 3 characters",
-					],
-					error: "Forbidden",
-				});
-		});
-		it("should create without the optional field", async () => {
-			await User.destroy({ where: {} });
-			await Credential.destroy({ where: {} });
-			delete registerBody.contact_email;
-			delete registerBody.image;
-			delete registerBody.bio;
-			console.log(registerBody);
-			return request(app.getHttpServer())
-				.post("/register")
-				.send(registerBody)
-				.expect(201);
-		});
+	it("should create", () => {
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect(201);
+	});
+	it("should not allow similar email ", () => {
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: "email you can't use this email",
+				error: "Forbidden",
+			});
+	});
+	it("should not allow similar user_name ", () => {
+		registerBody.email = "test1@test.com";
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: "user_name you can't use this user_name",
+				error: "Forbidden",
+			});
+	});
+	it("should not allow user_name with space", () => {
+		registerBody.user_name = "fea f";
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: ["user_name should not contain a space"],
+				error: "Forbidden",
+			});
+	});
+	it("should not allow user_name with less than 3 charachter ", () => {
+		registerBody.user_name = "      f    ";
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: [
+					"user_name must be longer than or equal to 3 characters",
+				],
+				error: "Forbidden",
+			});
+	});
+	it("should not allow user_name with more than 45 charachter", () => {
+		registerBody.user_name = "f    ".repeat(45);
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: [
+					"user_name must be shorter than or equal to 45 characters",
+				],
+				error: "Forbidden",
+			});
+	});
+	it("should not allow empty fist_name", () => {
+		registerBody.first_name = "";
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: [
+					"first_name must be longer than or equal to 3 characters",
+				],
+				error: "Forbidden",
+			});
+	});
+	it("should not allow empty last_name", () => {
+		registerBody.last_name = "";
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect({
+				statusCode: 403,
+				message: [
+					"last_name must be longer than or equal to 3 characters",
+				],
+				error: "Forbidden",
+			});
+	});
+	it("should create without the optional field", async () => {
+		await User.destroy({ where: {} });
+		await Credential.destroy({ where: {} });
+		delete registerBody.contact_email;
+		delete registerBody.image;
+		delete registerBody.bio;
+		return request(app.getHttpServer())
+			.post("/register")
+			.send(registerBody)
+			.expect(201);
 	});
 });
