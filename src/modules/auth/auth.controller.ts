@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	HttpCode,
+	HttpStatus,
+	Post,
+	UseGuards,
+} from "@nestjs/common";
 import { User } from "src/core/decorator/user.decorator";
 import { AuthService } from "./auth.service";
 import { registerDto } from "./dto/register.dto";
@@ -15,6 +22,7 @@ export class AuthController {
 	}
 
 	@UseGuards(LocalAuthGuard)
+	@HttpCode(HttpStatus.OK)
 	@Post("/login")
 	async logIn(@User() user: PayloadAttributes): Promise<JwtAttributes> {
 		return await this.authService.login(user);
