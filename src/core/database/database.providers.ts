@@ -1,5 +1,6 @@
 import { DynamicModule } from "@nestjs/common";
 import { SequelizeModule, SequelizeModuleOptions } from "@nestjs/sequelize";
+import { Admin } from "src/modules/admins/admin.entity";
 import { City } from "src/modules/cities/city.entity";
 import { Comment } from "src/modules/comments/entities/comment.entity";
 import { Country } from "src/modules/countries/country.entity";
@@ -31,6 +32,7 @@ export const databaseProvider: DynamicModule = SequelizeModule.forRoot({
 	models: [
 		Credential,
 		User,
+		Admin,
 		Country,
 		City,
 		Location,
