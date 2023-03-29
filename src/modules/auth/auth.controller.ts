@@ -1,9 +1,10 @@
 import { Body, Controller, Post, Request, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
+import { User } from "src/core/decorator/user.decorator";
 import { AuthService } from "./auth.service";
 import { registerDto } from "./dto/register.dto";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
 import { JwtAttributes } from "./interfaces/jwt.interface";
+import { PayloadAttributes } from "./interfaces/payload.interface";
 
 @Controller("")
 export class AuthController {
@@ -15,7 +16,7 @@ export class AuthController {
 
 	@UseGuards(LocalAuthGuard)
 	@Post("/login")
-	async logIn(@Request() req): Promise<JwtAttributes> {
-		return await this.authService.login(req.user);
+	async logIn(@User() user: PayloadAttributes): Promise<JwtAttributes> {
+		return await this.authService.login(user);
 	}
 }
