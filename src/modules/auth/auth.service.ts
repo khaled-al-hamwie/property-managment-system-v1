@@ -57,6 +57,7 @@ export class AuthService {
 		const user = await this.user.findByCredentialId(
 			credential.credential_id
 		);
+		if (!user) return null;
 		return {
 			user_name: credential.user_name,
 			user_id: user.user_id,
