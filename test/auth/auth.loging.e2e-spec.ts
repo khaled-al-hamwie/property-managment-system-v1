@@ -2,7 +2,6 @@ import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { hash } from "bcryptjs";
 import { AppModule } from "src/app.module";
-import { JwtAttributes } from "src/modules/auth/interfaces/jwt.interface";
 import { Credential } from "src/modules/credentials/credential.entity";
 import { User } from "src/modules/users/user.entity";
 import * as request from "supertest";
@@ -24,15 +23,14 @@ describe("login", () => {
 		await app.init();
 		await User.destroy({ where: {} });
 		await Credential.destroy({ where: {} });
-		await Credential.create({
-			credential_id: 1,
+		const password = await hash("12345678901234567890", 12);
+		const cre = await Credential.create({
 			email: "test@gmail.com",
-			user_name: "test",
-			password: await hash("12345678901234567890", 12),
+			user_name: "testl",
+			password,
 		});
 		await User.create({
-			user_id: 1,
-			credential_id: 1,
+			credential_id: cre.credential_id,
 			first_name: "test",
 			last_name: "test",
 		});
@@ -44,9 +42,8 @@ describe("login", () => {
 	it("should login successfuly", () => {
 		const req = request(app.getHttpServer())
 			.post("/login")
-			.send({ user_name: "test", password: "12345678901234567890" });
-
-		return req.expect(201);
+			.send({ user_name: "testl", password: "12345678901234567890" });
+		return req.expect(200);
 	});
 	it("should not login with wrong user_name", () => {
 		return request(app.getHttpServer())

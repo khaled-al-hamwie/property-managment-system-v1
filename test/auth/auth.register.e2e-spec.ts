@@ -11,13 +11,13 @@ describe("register a user", () => {
 	let registerBody: registerDto;
 	beforeEach(() => {
 		registerBody = {
-			email: "test@test.com",
+			email: "testr@test.com",
 			password: "112233441122334411223344",
-			user_name: "test",
+			user_name: "testr",
 			first_name: "test",
 			last_name: "test",
 			bio: "this is a test bio ",
-			contact_email: "test@test.com",
+			contact_email: "testr@test.com",
 			image: "https://google.com",
 		};
 	});
