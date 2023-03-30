@@ -1,19 +1,15 @@
 import { Transform, TransformFnParams } from "class-transformer";
 import {
-	Contains,
 	IsEmail,
-	IsNotEmpty,
 	IsOptional,
 	IsPhoneNumber,
 	IsString,
 	IsUrl,
 	Length,
-	MaxLength,
-	MinLength,
 	NotContains,
 } from "class-validator";
 
-export class registerDto {
+export class RegisterUserDto {
 	@IsEmail()
 	email: string;
 
