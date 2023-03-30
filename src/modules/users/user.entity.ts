@@ -51,7 +51,7 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 	bio: string;
 
 	@Column({
-		type: DataType.STRING(12),
+		type: DataType.STRING(20),
 		allowNull: true,
 	})
 	phone_number: string;

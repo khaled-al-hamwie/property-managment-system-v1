@@ -45,6 +45,12 @@ export class Credential extends Model<
 	})
 	password: string;
 
+	@Column({
+		type: DataType.BOOLEAN,
+		defaultValue: false,
+	})
+	is_admin: boolean;
+
 	@HasOne(() => User, { onDelete: "CASCADE" })
 	user: User;
 }

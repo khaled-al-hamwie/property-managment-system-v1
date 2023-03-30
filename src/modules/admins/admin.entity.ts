@@ -45,14 +45,14 @@ export class Admin
 
 	@Column({
 		type: DataType.STRING(245),
-		allowNull: false,
+		allowNull: true,
 		unique: true,
 	})
 	contact_email: string;
 
 	@Column({
-		type: DataType.STRING(12),
-		allowNull: false,
+		type: DataType.STRING(20),
+		allowNull: true,
 		unique: true,
 	})
 	phone_number: string;
