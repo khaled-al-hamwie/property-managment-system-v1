@@ -1,14 +1,14 @@
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app.module";
-import { registerDto } from "src/modules/auth/dto/register.dto";
+import { RegisterUserDto } from "src/modules/auth/dto/register.user.dto";
 import { Credential } from "src/modules/credentials/credential.entity";
 import { User } from "src/modules/users/user.entity";
 import * as request from "supertest";
 
 describe("register a user", () => {
 	let app: INestApplication;
-	let registerBody: registerDto;
+	let registerBody: RegisterUserDto;
 	beforeEach(() => {
 		registerBody = {
 			email: "testr@test.com",
