@@ -6,6 +6,7 @@ import { CredentialsModule } from "../credentials/credentials.module";
 import { UsersModule } from "../users/users.module";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { AdminStrategy } from "./strategy/admin.strategy";
 import { LocalStrategy } from "./strategy/local.strategy";
 import { UserStrategy } from "./strategy/user.strategy";
 
@@ -18,6 +19,6 @@ import { UserStrategy } from "./strategy/user.strategy";
 		JwtModule,
 	],
 	controllers: [AuthController],
-	providers: [AuthService, LocalStrategy, UserStrategy],
+	providers: [AuthService, LocalStrategy, UserStrategy, AdminStrategy],
 })
 export class AuthModule {}
