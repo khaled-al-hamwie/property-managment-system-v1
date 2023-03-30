@@ -3,11 +3,11 @@ import { PassportStrategy } from "@nestjs/passport";
 import * as dotenv from "dotenv";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { UsersService } from "src/modules/users/users.service";
-import { PayloadAttributes } from "../interfaces/payload.interface";
+import { UserPayload } from "../interfaces/payload.interface";
 
 dotenv.config();
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class UserStrategy extends PassportStrategy(Strategy, "user") {
 	constructor(private userService: UsersService) {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -16,7 +16,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 		});
 	}
 
-	async validate(payload: PayloadAttributes) {
+	async validate(payload: UserPayload) {
 		const user = await this.userService.findByUserId(payload.user_id);
 		if (!user) {
 			throw new UnauthorizedException();
