@@ -1,24 +1,28 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { AdminsService } from "../admins/admins.service";
+import { AdminDto } from "../admins/dot/admin.dto";
 import { CredentialsService } from "../credentials/credentials.service";
 import { credentialDto } from "../credentials/dto/credential.dto";
 import { CredentialUsernameLog } from "../credentials/interfaces/credential-log.interface";
 import { UserDto } from "../users/dto/user.dto";
 import { UsersService } from "../users/users.service";
-import { registerDto } from "./dto/register.dto";
+import { RegisterAdminDto } from "./dto/register.admin.dto";
+import { RegisterUserDto } from "./dto/register.user.dto";
 import { JwtAttributes } from "./interfaces/jwt.interface";
-import { PayloadAttributes } from "./interfaces/payload.interface";
+import { AdminPayload, UserPayload } from "./interfaces/payload.interface";
 
 @Injectable()
 export class AuthService {
 	constructor(
 		private user: UsersService,
+		private admin: AdminsService,
 		private credential: CredentialsService,
 		private jwtService: JwtService,
 		private configService: ConfigService
 	) {}
-	async register(body: registerDto): Promise<JwtAttributes> {
+	async registerUser(body: RegisterUserDto): Promise<JwtAttributes> {
 		const credential_attributes: credentialDto = {
 			user_name: body.user_name,
 			email: body.email,
@@ -35,8 +39,31 @@ export class AuthService {
 			image: body.image,
 		};
 		const user = await this.user.create(user_attributes);
-		const payload: PayloadAttributes = {
+		const payload: UserPayload = {
 			user_id: user.user_id,
+			user_name: credential.user_name,
+		};
+		return this.signToken(payload);
+	}
+
+	async registerAdmin(body: RegisterAdminDto) {
+		const credential_attributes: credentialDto = {
+			user_name: body.user_name,
+			email: body.email,
+			password: body.password,
+		};
+		const credential = await this.credential.create(credential_attributes);
+		const admin_attributes: AdminDto = {
+			credential_id: credential.credential_id,
+			first_name: body.first_name,
+			last_name: body.last_name,
+			contact_email: body.contact_email,
+			phone_number: body.phone_number,
+		};
+		const admin = await this.admin.create(admin_attributes);
+
+		const payload: AdminPayload = {
+			admin_id: admin.admin_id,
 			user_name: credential.user_name,
 		};
 		return this.signToken(payload);
@@ -45,7 +72,7 @@ export class AuthService {
 	async checkCredentials(
 		user_name: string,
 		password: string
-	): Promise<PayloadAttributes> {
+	): Promise<UserPayload> {
 		let credential_attributes: CredentialUsernameLog = {
 			user_name,
 			password,
@@ -64,7 +91,7 @@ export class AuthService {
 		};
 	}
 
-	async login(user: PayloadAttributes): Promise<JwtAttributes> {
+	async login(user: UserPayload): Promise<JwtAttributes> {
 		const payload = { user_name: user.user_name, sub: user.user_id };
 		const option = {
 			secret: this.configService.get("JWTKEY"),
@@ -75,11 +102,9 @@ export class AuthService {
 		};
 	}
 
-	async signToken({
-		user_name,
-		user_id,
-	}: PayloadAttributes): Promise<JwtAttributes> {
-		const payload = { user_name, user_id };
+	async signToken(
+		payload: UserPayload | AdminPayload
+	): Promise<JwtAttributes> {
 		const option = {
 			secret: this.configService.get("JWTKEY"),
 			expiresIn: this.configService.get("TOKEN_EXPIRATION"),
