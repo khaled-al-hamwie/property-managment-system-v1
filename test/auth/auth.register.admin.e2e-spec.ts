@@ -113,6 +113,7 @@ describe("register an admin", () => {
 				});
 		});
 		it("should not allow the same eamil ", () => {
+			registerBody.user_name = "tests";
 			return request(app.getHttpServer())
 				.post("/admin/register")
 				.set({ Authorization: `Bearer ${token}` })

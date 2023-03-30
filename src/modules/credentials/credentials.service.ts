@@ -5,7 +5,6 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { compare, hash } from "bcryptjs";
-import { UsersService } from "../users/users.service";
 import { Credential } from "./credential.entity";
 import { credentialDto } from "./dto/credential.dto";
 import { CredentialUsernameLog } from "./interfaces/credential-log.interface";
@@ -14,28 +13,25 @@ import { CredentialUsernameLog } from "./interfaces/credential-log.interface";
 export class CredentialsService {
 	constructor(
 		@InjectModel(Credential)
-		private CredentialModel: typeof Credential,
-		private UsersService: UsersService
+		private CredentialModel: typeof Credential
 	) {}
 	async create({ email, password, user_name }: credentialDto) {
-		// # UPDATE make it in one query instead of two
+		const messages = [];
 		let userWithSameEmail = await this.CredentialModel.findOne({
 			where: { email },
 		});
 		let userWithSameUserName = await this.CredentialModel.findOne({
 			where: { user_name },
 		});
-		if (userWithSameEmail)
-			throw new ForbiddenException("email you can't use this email", {
+		if (userWithSameEmail) messages.push("email you can't use this email");
+		if (userWithSameUserName)
+			messages.push("user_name you can't use this user_name");
+
+		if (messages.length >= 1) {
+			throw new ForbiddenException(messages, {
 				description: "Forbidden",
 			});
-		if (userWithSameUserName)
-			throw new ForbiddenException(
-				"user_name you can't use this user_name",
-				{
-					description: "Forbidden",
-				}
-			);
+		}
 		try {
 			password = await hash(password, 12);
 			let credential = await this.CredentialModel.create({
