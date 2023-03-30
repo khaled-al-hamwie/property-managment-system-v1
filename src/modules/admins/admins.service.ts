@@ -13,4 +13,8 @@ export class AdminsService {
 			throw new InternalServerErrorException();
 		}
 	}
+
+	findById(admin_id: number): Promise<Admin> {
+		return this.AdminModel.findByPk(admin_id);
+	}
 }
