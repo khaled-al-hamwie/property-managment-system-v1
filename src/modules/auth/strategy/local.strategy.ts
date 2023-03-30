@@ -6,7 +6,7 @@ import {
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { AuthService } from "../auth.service";
-import { PayloadAttributes } from "../interfaces/payload.interface";
+import { UserPayload } from "../interfaces/payload.interface";
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, "local") {
@@ -14,10 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy, "local") {
 		super({ usernameField: "user_name" });
 	}
 
-	async validate(
-		user_name: string,
-		password: string
-	): Promise<PayloadAttributes> {
+	async validate(user_name: string, password: string): Promise<UserPayload> {
 		const result = await this.authService.checkCredentials(
 			user_name,
 			password
