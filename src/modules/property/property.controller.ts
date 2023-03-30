@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { UserGuard } from "../auth/guard/user.guard";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyUpdateDto } from "./dto/property.update.dto";
 import { PropertyCreate } from "./interfaces/property.create.interface";
@@ -22,7 +22,7 @@ import { PropertyService } from "./property.service";
 export class PropertyController {
 	constructor(private propertyService: PropertyService) {}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Post()
 	createProperty(
 		@User("user_id") user_id: number,
@@ -35,7 +35,7 @@ export class PropertyController {
 		return this.propertyService.createProperty(property_attributes);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Get("/me")
 	getMyProperties(
 		@User("user_id") owner_id: number,
@@ -46,7 +46,7 @@ export class PropertyController {
 		return this.propertyService.getMyProperties(owner_id, limit, offset);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Patch(":id")
 	updateProperty(
 		@User("user_id") owner_id: number,
@@ -61,7 +61,7 @@ export class PropertyController {
 		});
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Delete(":id")
 	deleteProperty(
 		@User("user_id") owner_id: number,

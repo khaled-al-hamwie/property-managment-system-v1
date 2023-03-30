@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { UserGuard } from "../auth/guard/user.guard";
 import { CommentsService } from "./comments.service";
 import { CreateCommentDto } from "./dto/create-comment.dto";
 import { UpdateCommentDto } from "./dto/update-comment.dto";
@@ -20,7 +20,7 @@ import { UpdateCommentDto } from "./dto/update-comment.dto";
 export class CommentsController {
 	constructor(private readonly commentsService: CommentsService) {}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Post()
 	create(
 		@User("user_id") user_id: number,
@@ -39,7 +39,7 @@ export class CommentsController {
 		return this.commentsService.findAll(post_id);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Patch(":id")
 	update(
 		@User("user_id") user_id: number,
@@ -55,7 +55,7 @@ export class CommentsController {
 		});
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Delete(":id")
 	remove(
 		@User("user_id") user_id: number,

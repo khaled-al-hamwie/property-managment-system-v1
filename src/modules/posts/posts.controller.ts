@@ -11,7 +11,7 @@ import {
 } from "@nestjs/common";
 import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
-import { JwtAuthGuard } from "../auth/guard/jwt-auth.guard";
+import { UserGuard } from "../auth/guard/user.guard";
 import { PostCreateDto } from "./dto/post.create.dto";
 import { PostUpdateDto } from "./dto/post.update.dto";
 import { PostsService } from "./posts.service";
@@ -19,7 +19,7 @@ import { PostsService } from "./posts.service";
 @Controller("posts")
 export class PostsController {
 	constructor(private postService: PostsService) {}
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Post()
 	createPost(@User("user_id") owner_id: number, @Body() body: PostCreateDto) {
 		return this.postService.createPost({
@@ -33,7 +33,7 @@ export class PostsController {
 		return this.postService.getPosts(search);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Patch(":id")
 	updatePost(
 		@User("user_id") owner_id: number,
@@ -52,7 +52,7 @@ export class PostsController {
 		return this.postService.getPost(post_id);
 	}
 
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(UserGuard)
 	@Delete(":id")
 	deletePost(
 		@User("user_id") owner_id: number,
