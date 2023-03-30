@@ -7,6 +7,7 @@ import { Admin } from "src/modules/admins/admin.entity";
 import { RegisterAdminDto } from "src/modules/auth/dto/register.admin.dto";
 import { AdminPayload } from "src/modules/auth/interfaces/payload.interface";
 import { Credential } from "src/modules/credentials/credential.entity";
+import { User } from "src/modules/users/user.entity";
 import * as request from "supertest";
 
 describe("register an admin", () => {
@@ -33,6 +34,7 @@ describe("register an admin", () => {
 		);
 		await app.init();
 		await Admin.destroy({ where: {} });
+		await User.destroy({ where: {} });
 		await Credential.destroy({ where: {} });
 		const password = await hash("12345678901234567890", 12);
 		cre = await Credential.create({
@@ -49,9 +51,9 @@ describe("register an admin", () => {
 
 	beforeEach(() => {
 		registerBody = {
-			email: "testr@test.com",
+			email: "testra@test.com",
 			password: "112233441122334411223344",
-			user_name: "testr",
+			user_name: "testra",
 			first_name: "test",
 			last_name: "test",
 			contact_email: "testr@test.com",

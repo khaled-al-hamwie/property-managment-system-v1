@@ -38,10 +38,6 @@ describe("register a user", () => {
 		await Credential.destroy({ where: {} });
 	});
 
-	afterAll(async () => {
-		await app.close();
-	});
-
 	it("should create", () => {
 		return request(app.getHttpServer())
 			.post("/register")
@@ -200,5 +196,11 @@ describe("register a user", () => {
 			.post("/register")
 			.send(registerBody)
 			.expect(201);
+	});
+
+	afterAll(async () => {
+		await User.destroy({ where: {} });
+		await Credential.destroy({ where: {} });
+		await app.close();
 	});
 });
