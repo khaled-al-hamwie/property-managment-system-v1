@@ -1,36 +1,20 @@
-import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
-import { AppModule } from "src/app.module";
+import { INestApplication } from "@nestjs/common";
 import { AuthService } from "src/modules/auth/auth.service";
-import { AdminPayload } from "src/modules/auth/interfaces/payload.interface";
 import { CityDto } from "src/modules/cities/dto/city.dto";
 import * as request from "supertest";
-const route: string = "/admin/city";
+import { route, setUp } from "./constants";
 describe("create a city", () => {
 	let app: INestApplication;
 	let authService: AuthService;
 	let token: string;
 	let body: CityDto;
-	beforeAll(async () => {
-		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [AppModule],
-		}).compile();
-		app = moduleFixture.createNestApplication();
-		authService = moduleFixture.get<AuthService>(AuthService);
-		app.useGlobalPipes(
-			new ValidationPipe({
-				whitelist: true,
-				stopAtFirstError: true,
-				errorHttpStatusCode: HttpStatus.FORBIDDEN,
-			})
-		);
-		await app.init();
-		let loginBody: AdminPayload = {
-			admin_id: 1,
-			user_name: "testseeder1",
-		};
-		token = (await authService.login(loginBody)).access_token;
-	});
+	beforeAll(() =>
+		setUp().then((data) => {
+			app = data.app;
+			authService = data.authService;
+			token = data.token;
+		})
+	);
 	beforeEach(() => {
 		body = {
 			name: "gorgia",
@@ -43,7 +27,6 @@ describe("create a city", () => {
 		expect(authService).toBeDefined();
 	});
 	it("should create", () => {
-		console.log(body);
 		return request(app.getHttpServer())
 			.post("/admin/city")
 			.set({ Authorization: `Bearer ${token}` })
