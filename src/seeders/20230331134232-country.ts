@@ -37,7 +37,7 @@ export = {
 			})
 			.sort((a: country, b: country) => a.iso2.localeCompare(b.iso2));
 
-		for (let index = 0; index < countries.length; index++) {
+		for (let index = 0; index < 50; index++) {
 			console.log(`country : ${countries[index].country} id ${index}`);
 			await queryInterface.bulkInsert("Countries", [
 				{
@@ -49,7 +49,8 @@ export = {
 			]);
 			for (
 				let i = 0;
-				i < countries[index].cities.length &&
+				i < 4 &&
+				countries[index].cities.length > 4 &&
 				countries[index].cities[i].length < 45;
 				i++
 			) {
