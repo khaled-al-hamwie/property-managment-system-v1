@@ -70,11 +70,9 @@ describe("login", () => {
 			user_name: "test22",
 			password: "12345678901234567890",
 		});
-		console.log(req.body);
 		const decoded = jwt.verify(req.body.access_token, {
 			secret: process.env.JWTKEY,
 		});
-		console.log(decoded);
 		expect("admin_id" in decoded).toBe(true);
 		expect("user_name" in decoded).toBe(true);
 	});
