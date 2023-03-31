@@ -1,7 +1,17 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import { IsOptional, IsString, Length } from "class-validator";
+import {
+	IsInt,
+	IsOptional,
+	IsPositive,
+	IsString,
+	Length,
+} from "class-validator";
 
 export class CityDto {
+	@IsPositive()
+	@IsInt()
+	country_id: number;
+
 	@IsString()
 	@Transform(({ value }: TransformFnParams) => {
 		if (value && typeof value == "string") {
