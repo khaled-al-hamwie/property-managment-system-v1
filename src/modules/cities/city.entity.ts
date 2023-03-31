@@ -13,7 +13,10 @@ import {
 } from "./interfaces/city.interface";
 
 @Table
-export class City extends Model<CityAttributes, CityCreationAttributes> {
+export class City
+	extends Model<CityAttributes, CityCreationAttributes>
+	implements CityCreationAttributes
+{
 	@PrimaryKey
 	@Column({
 		autoIncrement: true,
