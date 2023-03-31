@@ -15,7 +15,7 @@ export class CredentialsService {
 		@InjectModel(Credential)
 		private CredentialModel: typeof Credential
 	) {}
-	async create({ email, password, user_name }: credentialDto) {
+	async create({ email, password, user_name, is_admin }: credentialDto) {
 		const messages = [];
 		let userWithSameEmail = await this.CredentialModel.findOne({
 			where: { email },
@@ -38,6 +38,7 @@ export class CredentialsService {
 				user_name,
 				email,
 				password,
+				is_admin,
 			});
 			return credential;
 		} catch (error) {

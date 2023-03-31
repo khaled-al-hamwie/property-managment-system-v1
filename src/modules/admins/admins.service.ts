@@ -17,4 +17,8 @@ export class AdminsService {
 	findById(admin_id: number): Promise<Admin> {
 		return this.AdminModel.findByPk(admin_id);
 	}
+
+	findByCredentialId(credential_id: number): Promise<Admin> {
+		return this.AdminModel.findOne({ where: { credential_id }, limit: 1 });
+	}
 }

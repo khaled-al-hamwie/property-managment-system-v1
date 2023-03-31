@@ -27,6 +27,7 @@ export class AuthService {
 			user_name: body.user_name,
 			email: body.email,
 			password: body.password,
+			is_admin: false,
 		};
 		const credential = await this.credential.create(credential_attributes);
 		const user_attributes: UserDto = {
@@ -51,6 +52,7 @@ export class AuthService {
 			user_name: body.user_name,
 			email: body.email,
 			password: body.password,
+			is_admin: true,
 		};
 		const credential = await this.credential.create(credential_attributes);
 		const admin_attributes: AdminDto = {
@@ -72,7 +74,7 @@ export class AuthService {
 	async checkCredentials(
 		user_name: string,
 		password: string
-	): Promise<UserPayload> {
+	): Promise<UserPayload | AdminPayload> {
 		let credential_attributes: CredentialUsernameLog = {
 			user_name,
 			password,
@@ -81,25 +83,42 @@ export class AuthService {
 			credential_attributes
 		);
 		if (!credential) return null;
-		const user = await this.user.findByCredentialId(
-			credential.credential_id
-		);
-		if (!user) return null;
-		return {
-			user_name: credential.user_name,
-			user_id: user.user_id,
-		};
+		else if (credential.is_admin) {
+			const admin = await this.admin.findByCredentialId(
+				credential.credential_id
+			);
+			if (!admin) return null;
+			return {
+				user_name: credential.user_name,
+				admin_id: admin.admin_id,
+			};
+		} else {
+			const user = await this.user.findByCredentialId(
+				credential.credential_id
+			);
+			if (!user) return null;
+
+			return {
+				user_name: credential.user_name,
+				user_id: user.user_id,
+			};
+		}
 	}
 
-	async login(user: UserPayload): Promise<JwtAttributes> {
-		const payload = { user_name: user.user_name, sub: user.user_id };
-		const option = {
-			secret: this.configService.get("JWTKEY"),
-			expiresIn: this.configService.get("TOKEN_EXPIRATION"),
-		};
-		return {
-			access_token: this.jwtService.sign(payload, option),
-		};
+	async login(user: UserPayload | AdminPayload): Promise<JwtAttributes> {
+		let payload: UserPayload | AdminPayload;
+		if ("user_id" in user) {
+			payload = {
+				user_id: user.user_id,
+				user_name: user.user_name,
+			};
+		} else if ("admin_id" in user) {
+			payload = {
+				admin_id: user.admin_id,
+				user_name: user.user_name,
+			};
+		}
+		return this.signToken(payload);
 	}
 
 	async signToken(

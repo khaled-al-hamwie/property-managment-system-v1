@@ -13,7 +13,7 @@ import { RegisterUserDto } from "./dto/register.user.dto";
 import { AdminGuard } from "./guard/admin.guard";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
 import { JwtAttributes } from "./interfaces/jwt.interface";
-import { UserPayload } from "./interfaces/payload.interface";
+import { AdminPayload, UserPayload } from "./interfaces/payload.interface";
 
 @Controller("")
 export class AuthController {
@@ -26,7 +26,9 @@ export class AuthController {
 	@UseGuards(LocalAuthGuard)
 	@HttpCode(HttpStatus.OK)
 	@Post("/login")
-	async logIn(@User() user: UserPayload): Promise<JwtAttributes> {
+	async logIn(
+		@User() user: UserPayload | AdminPayload
+	): Promise<JwtAttributes> {
 		return await this.authService.login(user);
 	}
 
