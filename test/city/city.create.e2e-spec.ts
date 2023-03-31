@@ -1,13 +1,11 @@
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app.module";
-import { Admin } from "src/modules/admins/admin.entity";
 import { AuthService } from "src/modules/auth/auth.service";
-import { RegisterAdminDto } from "src/modules/auth/dto/register.admin.dto";
+import { AdminPayload } from "src/modules/auth/interfaces/payload.interface";
 import { CityDto } from "src/modules/cities/dto/city.dto";
-import { Credential } from "src/modules/credentials/credential.entity";
-import { User } from "src/modules/users/user.entity";
 import * as request from "supertest";
+const route: string = "/admin/city";
 describe("create a city", () => {
 	let app: INestApplication;
 	let authService: AuthService;
@@ -27,22 +25,16 @@ describe("create a city", () => {
 			})
 		);
 		await app.init();
-		await User.destroy({ where: {} });
-		await Admin.destroy({ where: {} });
-		await Credential.destroy({ where: {} });
-		const registerBody: RegisterAdminDto = {
-			email: "testr@test.com",
-			password: "112233441122334411223344",
-			user_name: "testr",
-			first_name: "test",
-			last_name: "test",
-			contact_email: "testr@test.com",
+		let loginBody: AdminPayload = {
+			admin_id: 1,
+			user_name: "testseeder1",
 		};
-		token = (await authService.registerAdmin(registerBody)).access_token;
+		token = (await authService.login(loginBody)).access_token;
 	});
 	beforeEach(() => {
 		body = {
 			name: "gorgia",
+			country_id: 1,
 			state: "some where",
 		};
 	});
@@ -58,10 +50,59 @@ describe("create a city", () => {
 			.send(body)
 			.expect({});
 	});
+	describe("validate", () => {
+		it("should not accept names smaller than 3", () => {
+			delete body.name;
+			return request(app.getHttpServer())
+				.post(route)
+				.set({ Authorization: `Bearer ${token}` })
+				.send(body)
+				.expect({
+					statusCode: 403,
+					message: [
+						"name must be longer than or equal to 3 characters",
+					],
+					error: "Forbidden",
+				});
+		});
+		it("should not accept no country_id", () => {
+			delete body.country_id;
+			return request(app.getHttpServer())
+				.post(route)
+				.set({ Authorization: `Bearer ${token}` })
+				.send(body)
+				.expect({
+					statusCode: 403,
+					message: ["country_id must be an integer number"],
+					error: "Forbidden",
+				});
+		});
+		it("should not accept negative country_id", () => {
+			body.country_id = -2;
+			return request(app.getHttpServer())
+				.post(route)
+				.set({ Authorization: `Bearer ${token}` })
+				.send(body)
+				.expect({
+					statusCode: 403,
+					message: ["country_id must be a positive number"],
+					error: "Forbidden",
+				});
+		});
+		it("should not accept decimal country_id", () => {
+			body.country_id = 2.2;
+			return request(app.getHttpServer())
+				.post(route)
+				.set({ Authorization: `Bearer ${token}` })
+				.send(body)
+				.expect({
+					statusCode: 403,
+					message: ["country_id must be an integer number"],
+					error: "Forbidden",
+				});
+		});
+	});
 	afterAll(async () => {
-		await User.destroy({ where: {} });
-		await Admin.destroy({ where: {} });
-		await Credential.destroy({ where: {} });
 		await app.close();
 	});
 });
