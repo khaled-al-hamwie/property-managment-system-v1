@@ -6,6 +6,7 @@ import {
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
+import { City } from "../cities/city.entity";
 import { Location } from "../locations/location.entity";
 import {
 	CountryAttributes,
@@ -43,4 +44,7 @@ export class Country extends Model<
 
 	@HasMany(() => Location)
 	locations: Location[];
+
+	@HasMany(() => City)
+	cities: City[];
 }

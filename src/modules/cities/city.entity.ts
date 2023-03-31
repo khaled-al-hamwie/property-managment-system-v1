@@ -1,11 +1,14 @@
 import {
+	BelongsTo,
 	Column,
 	DataType,
+	ForeignKey,
 	HasMany,
 	Model,
 	PrimaryKey,
 	Table,
 } from "sequelize-typescript";
+import { Country } from "../countries/country.entity";
 import { Location } from "../locations/location.entity";
 import {
 	CityAttributes,
@@ -24,6 +27,13 @@ export class City
 	})
 	city_id: number;
 
+	@ForeignKey(() => Country)
+	@Column({
+		type: DataType.SMALLINT,
+		allowNull: false,
+	})
+	country_id: number;
+
 	@Column({
 		type: DataType.STRING(45),
 		allowNull: false,
@@ -38,4 +48,7 @@ export class City
 
 	@HasMany(() => Location)
 	locations: Location[];
+
+	@BelongsTo(() => Country)
+	country: Country;
 }
