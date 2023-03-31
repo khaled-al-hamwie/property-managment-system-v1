@@ -69,12 +69,16 @@ describe("register an admin", () => {
 		expect(app).toBeDefined();
 	});
 	describe("should be guarded", () => {
-		it("should create with guard", () => {
-			return request(app.getHttpServer())
+		it("should create with guard", async () => {
+			const req = await request(app.getHttpServer())
 				.post("/admin/register")
 				.set({ Authorization: `Bearer ${token}` })
-				.send(registerBody)
-				.expect(201);
+				.send(registerBody);
+			const decoded = jwt.verify(req.body.access_token, {
+				secret: process.env.JWTKEY,
+			});
+			expect("admin_id" in decoded).toBe(true);
+			expect("user_name" in decoded).toBe(true);
 		});
 		it("should not create without token", () => {
 			return request(app.getHttpServer())

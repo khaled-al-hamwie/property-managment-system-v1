@@ -1,4 +1,5 @@
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app.module";
 import { RegisterUserDto } from "src/modules/auth/dto/register.user.dto";
@@ -9,6 +10,7 @@ import * as request from "supertest";
 describe("register a user", () => {
 	let app: INestApplication;
 	let registerBody: RegisterUserDto;
+	let jwt: JwtService;
 	beforeEach(() => {
 		registerBody = {
 			email: "testr@test.com",
@@ -24,8 +26,10 @@ describe("register a user", () => {
 	beforeAll(async () => {
 		const moduleFixture: TestingModule = await Test.createTestingModule({
 			imports: [AppModule],
+			providers: [JwtService],
 		}).compile();
 		app = moduleFixture.createNestApplication();
+		jwt = moduleFixture.get<JwtService>(JwtService);
 		app.useGlobalPipes(
 			new ValidationPipe({
 				whitelist: true,
@@ -38,11 +42,16 @@ describe("register a user", () => {
 		await Credential.destroy({ where: {} });
 	});
 
-	it("should create", () => {
-		return request(app.getHttpServer())
+	it("should create", async () => {
+		const req = await request(app.getHttpServer())
 			.post("/register")
 			.send(registerBody)
 			.expect(201);
+		const decoded = jwt.verify(req.body.access_token, {
+			secret: process.env.JWTKEY,
+		});
+		expect("user_id" in decoded).toBe(true);
+		expect("user_name" in decoded).toBe(true);
 	});
 	describe("email", () => {
 		it("should not allow no email ", () => {
