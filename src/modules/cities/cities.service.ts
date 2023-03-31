@@ -1,5 +1,6 @@
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Op } from "sequelize";
 import { City } from "./city.entity";
 import { CityDto } from "./dto/city.dto";
 
@@ -8,15 +9,14 @@ export class CitiesService {
 	constructor(@InjectModel(City) private CityModel: typeof City) {}
 
 	async create(body: CityDto) {
-		console.log(body);
 		await this.CityModel.create(body);
 		return "done";
 	}
 
-	async getAll(search: string | undefined): Promise<City[]> {
-		if (search)
-			return await this.CityModel.findAll({ where: { name: search } });
-		return await this.CityModel.findAll();
+	findAll(search: string): Promise<City[]> {
+		return this.CityModel.findAll({
+			where: { name: { [Op.regexp]: search } },
+		});
 	}
 
 	async find(city_id: number): Promise<City> {

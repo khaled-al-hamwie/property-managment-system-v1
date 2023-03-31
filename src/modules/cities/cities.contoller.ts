@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
 import { AdminGuard } from "../auth/guard/admin.guard";
 import { CitiesService } from "./cities.service";
 import { CityDto } from "./dto/city.dto";
@@ -7,12 +7,16 @@ import { CityDto } from "./dto/city.dto";
 export class CitiesController {
 	constructor(private citiesService: CitiesService) {}
 	// add city
-	// @UseGuards(AdminGuard)
+	@UseGuards(AdminGuard)
 	@Post()
 	create(@Body() body: CityDto) {
-		console.log("hi");
-		console.log(body);
 		return this.citiesService.create(body);
+	}
+
+	@UseGuards(AdminGuard)
+	@Get()
+	findAll(@Query("search") search) {
+		return this.citiesService.findAll(search);
 	}
 	// update city
 	// remove city
