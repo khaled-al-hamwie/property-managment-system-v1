@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from "@nestjs/common";
+import {
+	Body,
+	Controller,
+	ForbiddenException,
+	Get,
+	Post,
+	Query,
+	UseGuards,
+} from "@nestjs/common";
 import { AdminGuard } from "../auth/guard/admin.guard";
 import { CitiesService } from "./cities.service";
 import { CityDto } from "./dto/city.dto";
@@ -15,9 +23,15 @@ export class CitiesController {
 
 	@UseGuards(AdminGuard)
 	@Get()
-	findAll(@Query("search") search) {
+	findAll(@Query("search") search: string) {
+		if (!search) {
+			throw new ForbiddenException(
+				["search the query search is required"],
+				{
+					description: "Forbidden",
+				}
+			);
+		}
 		return this.citiesService.findAll(search);
 	}
-	// update city
-	// remove city
 }

@@ -16,6 +16,7 @@ export class CitiesService {
 	findAll(search: string): Promise<City[]> {
 		return this.CityModel.findAll({
 			where: { name: { [Op.regexp]: search } },
+			order: [["city_id", "DESC"]],
 		});
 	}
 
