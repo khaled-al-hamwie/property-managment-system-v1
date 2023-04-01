@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import { Op } from "sequelize";
 import { Country } from "./country.entity";
 
 @Injectable()
 export class CountriesService {
 	constructor(@InjectModel(Country) private CountryModel: typeof Country) {}
-	async getAll(search: string | undefined): Promise<Country[]> {
-		if (search)
-			return await this.CountryModel.findAll({ where: { name: search } });
-		return await this.CountryModel.findAll();
+	findAll(search: string): Promise<Country[]> {
+		return this.CountryModel.findAll({
+			where: { name: { [Op.regexp]: search } },
+			include: ["cities"],
+		});
 	}
 
 	async find(country_id: number): Promise<Country> {
