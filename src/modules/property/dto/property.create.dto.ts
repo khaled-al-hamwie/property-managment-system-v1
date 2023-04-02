@@ -35,7 +35,7 @@ export class PropertyCreateDto {
 		}
 	})
 	@Length(10, 500)
-	description: string;
+	description?: string;
 
 	@IsOptional()
 	images?: string[];
