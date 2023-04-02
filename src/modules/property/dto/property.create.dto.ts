@@ -33,6 +33,7 @@ export class PropertyCreateDto {
 		if (value && typeof value == "string") {
 			return value.trim();
 		}
+		return false;
 	})
 	@Length(10, 500)
 	description?: string;
