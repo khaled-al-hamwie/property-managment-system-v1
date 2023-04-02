@@ -10,7 +10,7 @@ import { Location } from "../locations/location.entity";
 import { LocationsService } from "../locations/locations.service";
 import { PropertyType } from "../property-types/property-type.entity";
 import { PropertyTypesService } from "../property-types/property-types.service";
-import { PropertyCreate } from "./interfaces/property.create.interface";
+import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyDelete } from "./interfaces/property.delete.interface";
 import { PropertyCreationAttributes } from "./interfaces/property.interface";
 import { PropertyUpdate } from "./interfaces/property.update.interface";
@@ -39,18 +39,20 @@ export class PropertyService {
 		});
 	}
 
-	async create({
-		city_id,
-		country_id,
-		owner_id,
-		name,
-		place,
-		is_private,
-		property_type_id,
-		description,
-		google_map_link,
-		images,
-	}: PropertyCreate) {
+	async create(
+		owner_id: number,
+		{
+			city_id,
+			country_id,
+			name,
+			place,
+			is_private,
+			property_type_id,
+			description,
+			google_map_link,
+			images,
+		}: PropertyCreateDto
+	) {
 		const location_attributes: LocationCreation = {
 			country_id,
 			city_id,
@@ -60,14 +62,13 @@ export class PropertyService {
 		const property_type = await this.PropertyType.find(property_type_id);
 		if (!property_type) {
 			throw new ForbiddenException(
-				["property_type_id unvalid property type"],
+				["property_type_id non existed property_type_id"],
 				{
 					description: "Forbidden",
 				}
 			);
 		}
 		const location = await this.Location.create(location_attributes);
-
 		const property_attributes: PropertyCreationAttributes = {
 			owner_id,
 			property_type_id,

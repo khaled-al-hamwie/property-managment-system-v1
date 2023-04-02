@@ -15,7 +15,6 @@ import { User } from "src/core/decorator/user.decorator";
 import { UserGuard } from "../auth/guard/user.guard";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyUpdateDto } from "./dto/property.update.dto";
-import { PropertyCreate } from "./interfaces/property.create.interface";
 import { PropertyService } from "./property.service";
 
 @Controller("property")
@@ -25,14 +24,10 @@ export class PropertyController {
 	@UseGuards(UserGuard)
 	@Post()
 	createProperty(
-		@User("user_id") user_id: number,
+		@User("user_id") owner_id: number,
 		@Body() body: PropertyCreateDto
 	) {
-		let property_attributes: PropertyCreate = {
-			...body,
-			owner_id: user_id,
-		};
-		return this.propertyService.create(property_attributes);
+		return this.propertyService.create(owner_id, body);
 	}
 
 	@UseGuards(UserGuard)
