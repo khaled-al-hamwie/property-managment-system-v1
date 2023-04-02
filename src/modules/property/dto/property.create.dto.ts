@@ -2,15 +2,15 @@ import { Transform, TransformFnParams } from "class-transformer";
 import {
 	IsBoolean,
 	IsInt,
-	IsNumber,
-	isNumber,
 	IsOptional,
+	IsPositive,
 	IsString,
 	IsUrl,
 	Length,
 } from "class-validator";
 
 export class PropertyCreateDto {
+	@IsPositive()
 	@IsInt()
 	property_type_id: number;
 
@@ -25,7 +25,7 @@ export class PropertyCreateDto {
 
 	@IsOptional()
 	@IsBoolean()
-	is_private: boolean;
+	is_private?: boolean;
 
 	@IsOptional()
 	@IsString()
@@ -38,11 +38,13 @@ export class PropertyCreateDto {
 	description: string;
 
 	@IsOptional()
-	images: string[];
+	images?: string[];
 
+	@IsPositive()
 	@IsInt()
 	country_id: number;
 
+	@IsPositive()
 	@IsInt()
 	city_id: number;
 
@@ -57,5 +59,5 @@ export class PropertyCreateDto {
 
 	@IsOptional()
 	@IsUrl()
-	google_map_link: string;
+	google_map_link?: string;
 }
