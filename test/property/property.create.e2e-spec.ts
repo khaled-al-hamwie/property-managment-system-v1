@@ -29,7 +29,7 @@ describe("create property", () => {
 		body = {
 			property_type_id: 1,
 			name: "my appartment",
-			description: "",
+			description: "this is long enough",
 			country_id: 1,
 			city_id: 1,
 			place: "in the abbo ST.",
@@ -135,6 +135,39 @@ describe("create property", () => {
 				body[property] = "2f     ".repeat(45);
 				return stringsmallerThan(metaData, property, 45);
 			});
+		});
+		describe("description", () => {
+			const property = "description";
+			it("should longer than 10", () => {
+				body[property] = "     2f     ";
+				return stringBiggerThan(metaData, property, 10);
+			});
+			it("should less than 500", () => {
+				body[property] = "2f     ".repeat(500);
+				return stringsmallerThan(metaData, property, 500);
+			});
+		});
+		describe("place", () => {
+			const property = "place";
+			it("should exists", () => {
+				delete body[property];
+				return stringBiggerThan(metaData, property, 3);
+			});
+			it("should longer than 3", () => {
+				body[property] = "     2f     ";
+				return stringBiggerThan(metaData, property, 3);
+			});
+			it("should less than 45", () => {
+				body[property] = "2f     ".repeat(45);
+				return stringsmallerThan(metaData, property, 45);
+			});
+		});
+		it("should create", () => {
+			return request(app.getHttpServer())
+				.post(route)
+				.set({ Authorization: `Bearer ${user_token}` })
+				.send(body)
+				.expect(201);
 		});
 	});
 	afterAll(async () => {
