@@ -16,14 +16,17 @@ export class LocationsService {
 		const city = await this.City.find(location.city_id);
 		const country = await this.Country.find(location.country_id);
 		if (!city) {
-			throw new ForbiddenException("city_id unvalid city", {
+			throw new ForbiddenException(["city_id non existed city_id"], {
 				description: "Forbidden",
 			});
 		}
 		if (!country) {
-			throw new ForbiddenException("country_id unvalid country", {
-				description: "Forbidden",
-			});
+			throw new ForbiddenException(
+				["country_id non existed country_id"],
+				{
+					description: "Forbidden",
+				}
+			);
 		}
 		return await this.LocationModel.create(location);
 	}
