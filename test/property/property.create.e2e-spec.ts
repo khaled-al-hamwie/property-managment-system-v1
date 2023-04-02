@@ -2,8 +2,9 @@ import { INestApplication } from "@nestjs/common";
 import { AuthService } from "src/modules/auth/auth.service";
 import { PropertyCreateDto } from "src/modules/property/dto/property.create.dto";
 import * as request from "supertest";
-import { idInt } from "../../spec/id/id.integer.test";
-import { idPositive } from "../../spec/id/id.positive.test";
+import { idExists } from "../partials/id/id.exists.test";
+import { idInt } from "../partials/id/id.integer.test";
+import { idPositive } from "../partials/id/id.positive.test";
 import { route, setUp } from "./constants";
 describe("create property", () => {
 	let app: INestApplication;
@@ -59,18 +60,60 @@ describe("create property", () => {
 				.expect(403);
 		});
 		describe("property_type_id", () => {
-			const title = "property_type_id";
-			it(`should not accept no ${title}`, () => {
-				delete body.property_type_id;
-				return idInt(app, route, body, title, user_token);
+			const property = "property_type_id";
+			it(`should not accept no ${property}`, () => {
+				delete body[property];
+				return idInt(app, route, body, property, user_token);
 			});
 			it("should not accept decimal property_type_id", () => {
-				body.property_type_id = 1.2;
-				return idInt(app, route, body, title, user_token);
+				body[property] = 1.2;
+				return idInt(app, route, body, property, user_token);
 			});
 			it("should not accept negative property_type_id", () => {
-				body.property_type_id = -2;
-				return idPositive(app, route, body, title, user_token);
+				body[property] = -2;
+				return idPositive(app, route, body, property, user_token);
+			});
+			it("should exist in the data base", () => {
+				body[property] = 132321;
+				return idExists(app, route, body, property, user_token);
+			});
+		});
+		describe("country_id", () => {
+			const property = "country_id";
+			it(`should not accept no ${property}`, () => {
+				delete body[property];
+				return idInt(app, route, body, property, user_token);
+			});
+			it("should not accept decimal property_type_id", () => {
+				body[property] = 1.2;
+				return idInt(app, route, body, property, user_token);
+			});
+			it("should not accept negative property_type_id", () => {
+				body[property] = -2;
+				return idPositive(app, route, body, property, user_token);
+			});
+			it("should exist in the data base", () => {
+				body[property] = 132321;
+				return idExists(app, route, body, property, user_token);
+			});
+		});
+		describe("city_id", () => {
+			const property = "city_id";
+			it(`should not accept no ${property}`, () => {
+				delete body[property];
+				return idInt(app, route, body, property, user_token);
+			});
+			it("should not accept decimal property_type_id", () => {
+				body[property] = 1.2;
+				return idInt(app, route, body, property, user_token);
+			});
+			it("should not accept negative property_type_id", () => {
+				body[property] = -2;
+				return idPositive(app, route, body, property, user_token);
+			});
+			it("should exist in the data base", () => {
+				body[property] = 132321;
+				return idExists(app, route, body, property, user_token);
 			});
 		});
 	});
