@@ -4,7 +4,7 @@ export function idInt(
 	app: INestApplication,
 	route: string,
 	body: any,
-	title: string,
+	attribute_name: string,
 	token: string
 ) {
 	return request(app.getHttpServer())
@@ -13,7 +13,7 @@ export function idInt(
 		.send(body)
 		.expect({
 			statusCode: 403,
-			message: [`${title} must be an integer number`],
+			message: [`${attribute_name} must be an integer number`],
 			error: "Forbidden",
 		});
 }

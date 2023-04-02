@@ -4,7 +4,7 @@ export function idPositive(
 	app: INestApplication,
 	route: string,
 	body: any,
-	title: string,
+	attribute_name: string,
 	token: string
 ) {
 	return request(app.getHttpServer())
@@ -13,7 +13,7 @@ export function idPositive(
 		.send(body)
 		.expect({
 			statusCode: 403,
-			message: [`${title} must be a positive number`],
+			message: [`${attribute_name} must be a positive number`],
 			error: "Forbidden",
 		});
 }
