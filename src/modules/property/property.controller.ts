@@ -32,7 +32,7 @@ export class PropertyController {
 			...body,
 			owner_id: user_id,
 		};
-		return this.propertyService.createProperty(property_attributes);
+		return this.propertyService.create(property_attributes);
 	}
 
 	@UseGuards(UserGuard)

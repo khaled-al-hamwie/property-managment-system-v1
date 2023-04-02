@@ -1,19 +1,15 @@
 import {
 	ForbiddenException,
-	Inject,
 	Injectable,
 	NotAcceptableException,
 	NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { CitiesService } from "../cities/cities.service";
-import { CountriesService } from "../countries/countries.service";
 import { LocationCreation } from "../locations/interfaces/location.entity.interface";
 import { Location } from "../locations/location.entity";
 import { LocationsService } from "../locations/locations.service";
 import { PropertyType } from "../property-types/property-type.entity";
 import { PropertyTypesService } from "../property-types/property-types.service";
-import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyCreate } from "./interfaces/property.create.interface";
 import { PropertyDelete } from "./interfaces/property.delete.interface";
 import { PropertyCreationAttributes } from "./interfaces/property.interface";
@@ -43,7 +39,7 @@ export class PropertyService {
 		});
 	}
 
-	async createProperty({
+	async create({
 		city_id,
 		country_id,
 		owner_id,
@@ -64,7 +60,7 @@ export class PropertyService {
 		const property_type = await this.PropertyType.find(property_type_id);
 		if (!property_type) {
 			throw new ForbiddenException(
-				"property_type_id unvalid property type",
+				["property_type_id unvalid property type"],
 				{
 					description: "Forbidden",
 				}
@@ -82,7 +78,7 @@ export class PropertyService {
 			images,
 		};
 		await this.PropertyModule.create(property_attributes);
-		return "";
+		return "done";
 	}
 	async getProperty(
 		property_id: number,
