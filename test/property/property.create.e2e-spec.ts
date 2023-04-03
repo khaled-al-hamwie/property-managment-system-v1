@@ -1,4 +1,5 @@
 import { INestApplication } from "@nestjs/common";
+import path from "path";
 import { AuthService } from "src/modules/auth/auth.service";
 import { PropertyCreateDto } from "src/modules/property/dto/property.create.dto";
 import * as request from "supertest";
@@ -162,12 +163,56 @@ describe("create property", () => {
 				return stringsmallerThan(metaData, property, 45);
 			});
 		});
+		describe("imaga", () => {
+			it("should not allow non jpg image", () => {
+				return request(app.getHttpServer())
+					.post(route)
+					.set({ Authorization: `Bearer ${user_token}` })
+					.attach("file", "test/samples/.env.sample")
+					.field("city_id", 1)
+					.field("country_id", 1)
+					.field("description", body.description)
+					.field("name", body.name)
+					.field("place", body.place)
+					.field("property_type_id", 1)
+					.expect({
+						statusCode: 403,
+						message:
+							"Validation failed (expected type is image/jpeg)",
+						error: "Forbidden",
+					});
+			});
+			it("should not allow big image", () => {
+				return request(app.getHttpServer())
+					.post(route)
+					.set({ Authorization: `Bearer ${user_token}` })
+					.attach("file", "test/samples/big-test.jpg")
+					.field("city_id", 1)
+					.field("country_id", 1)
+					.field("description", body.description)
+					.field("name", body.name)
+					.field("place", body.place)
+					.field("property_type_id", 1)
+					.expect({
+						statusCode: 403,
+						message:
+							"Validation failed (expected size is less than 10000)",
+						error: "Forbidden",
+					});
+			});
+		});
 		it("should create", () => {
 			return request(app.getHttpServer())
 				.post(route)
 				.set({ Authorization: `Bearer ${user_token}` })
-				.send(body)
-				.expect(201);
+				.attach("file", "test/samples/jpg-test.jpg")
+				.field("city_id", 1)
+				.field("country_id", 1)
+				.field("description", body.description)
+				.field("name", body.name)
+				.field("place", body.place)
+				.field("property_type_id", 1)
+				.expect("done");
 		});
 	});
 	afterAll(async () => {
