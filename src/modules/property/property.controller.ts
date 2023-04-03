@@ -4,14 +4,20 @@ import {
 	DefaultValuePipe,
 	Delete,
 	Get,
+	ParseFilePipeBuilder,
 	ParseIntPipe,
 	Patch,
 	Post,
 	Query,
+	UploadedFile,
 	UseGuards,
+	UseInterceptors,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { Express } from "express";
 import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
+import { IdPipe } from "src/core/pipes/id.pipe";
 import { UserGuard } from "../auth/guard/user.guard";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyUpdateDto } from "./dto/property.update.dto";
@@ -23,11 +29,19 @@ export class PropertyController {
 
 	@UseGuards(UserGuard)
 	@Post()
+	@UseInterceptors(FileInterceptor("file"))
 	createProperty(
 		@User("user_id") owner_id: number,
-		@Body() body: PropertyCreateDto
+		@Body() body: PropertyCreateDto,
+		@UploadedFile(
+			new ParseFilePipeBuilder()
+				.addFileTypeValidator({ fileType: "image/jpeg" })
+				.addMaxSizeValidator({ maxSize: 10_000 })
+				.build({ errorHttpStatusCode: 403, fileIsRequired: false })
+		)
+		image: Express.Multer.File
 	) {
-		return this.propertyService.create(owner_id, body);
+		return this.propertyService.create(owner_id, body, image);
 	}
 
 	@UseGuards(UserGuard)
@@ -49,11 +63,11 @@ export class PropertyController {
 		@IdParam(ParseIntPipe)
 		property_id: number
 	) {
-		return this.propertyService.updateProperty({
-			...body,
-			property_id,
-			owner_id,
-		});
+		// return this.propertyService.updateProperty({
+		// 	...body,
+		// 	property_id,
+		// 	owner_id,
+		// });
 	}
 
 	@UseGuards(UserGuard)

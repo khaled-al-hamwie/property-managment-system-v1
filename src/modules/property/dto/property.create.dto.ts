@@ -10,6 +10,9 @@ import {
 } from "class-validator";
 
 export class PropertyCreateDto {
+	@Transform(({ value }: TransformFnParams) => {
+		return Number(value);
+	})
 	@IsPositive()
 	@IsInt()
 	property_type_id: number;
@@ -38,13 +41,16 @@ export class PropertyCreateDto {
 	@Length(10, 500)
 	description?: string;
 
-	@IsOptional()
-	images?: string[];
-
+	@Transform(({ value }: TransformFnParams) => {
+		return Number(value);
+	})
 	@IsPositive()
 	@IsInt()
 	country_id: number;
 
+	@Transform(({ value }: TransformFnParams) => {
+		return Number(value);
+	})
 	@IsPositive()
 	@IsInt()
 	city_id: number;

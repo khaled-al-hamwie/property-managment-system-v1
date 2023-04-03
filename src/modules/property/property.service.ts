@@ -1,6 +1,7 @@
 import {
 	ForbiddenException,
 	Injectable,
+	InternalServerErrorException,
 	NotAcceptableException,
 	NotFoundException,
 } from "@nestjs/common";
@@ -10,6 +11,7 @@ import { Location } from "../locations/location.entity";
 import { LocationsService } from "../locations/locations.service";
 import { PropertyType } from "../property-types/property-type.entity";
 import { PropertyTypesService } from "../property-types/property-types.service";
+import { UploadService } from "../upload/upload.service";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyDelete } from "./interfaces/property.delete.interface";
 import { PropertyCreationAttributes } from "./interfaces/property.interface";
@@ -21,7 +23,8 @@ export class PropertyService {
 	constructor(
 		@InjectModel(Property) private PropertyModule: typeof Property,
 		private Location: LocationsService,
-		private PropertyType: PropertyTypesService
+		private PropertyType: PropertyTypesService,
+		private uploadService: UploadService
 	) {}
 	async getMyProperties(
 		owner_id: number,
@@ -50,8 +53,8 @@ export class PropertyService {
 			property_type_id,
 			description,
 			google_map_link,
-			images,
-		}: PropertyCreateDto
+		}: PropertyCreateDto,
+		image: Express.Multer.File
 	) {
 		const location_attributes: LocationCreation = {
 			country_id,
@@ -76,9 +79,22 @@ export class PropertyService {
 			name: name,
 			private: is_private,
 			description,
-			images,
 		};
-		await this.PropertyModule.create(property_attributes);
+		if (image) {
+			const image_name = this.uploadService.createName(
+				image.originalname.trim()
+			);
+			console.log(image_name);
+			try {
+				this.uploadService.upload(image.buffer, image_name);
+				await this.PropertyModule.create({
+					...property_attributes,
+					images: image_name,
+				});
+			} catch (error) {
+				throw new InternalServerErrorException();
+			}
+		}
 		return "done";
 	}
 	async getProperty(
