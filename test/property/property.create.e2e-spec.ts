@@ -1,5 +1,4 @@
 import { INestApplication } from "@nestjs/common";
-import path from "path";
 import { AuthService } from "src/modules/auth/auth.service";
 import { PropertyCreateDto } from "src/modules/property/dto/property.create.dto";
 import * as request from "supertest";
