@@ -8,7 +8,7 @@ export interface PropertyAttributes {
 	name: string;
 	private: boolean;
 	description?: string;
-	images?: string[];
+	images?: string;
 }
 
 export interface PropertyCreationAttributes

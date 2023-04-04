@@ -3,5 +3,5 @@ export interface PropertyUpdate {
 	owner_id: number;
 	name: string;
 	description?: string;
-	images?: string[];
+	images?: string;
 }
