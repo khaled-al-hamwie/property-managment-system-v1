@@ -6,6 +6,7 @@ import {
 	AdminPayload,
 	UserPayload,
 } from "src/modules/auth/interfaces/payload.interface";
+import { PropertyService } from "src/modules/property/property.service";
 
 export const route = "/property";
 export const admin_credentails: AdminPayload = {
@@ -20,6 +21,7 @@ export const user_credentails: UserPayload = {
 export async function setUp() {
 	let app: INestApplication;
 	let authService: AuthService;
+	let propertyService: PropertyService;
 	let admin_token: string;
 	let user_token: string;
 	const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -27,6 +29,7 @@ export async function setUp() {
 	}).compile();
 	app = moduleFixture.createNestApplication();
 	authService = moduleFixture.get<AuthService>(AuthService);
+	propertyService = moduleFixture.get<PropertyService>(PropertyService);
 	app.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -37,5 +40,5 @@ export async function setUp() {
 	await app.init();
 	admin_token = (await authService.login(admin_credentails)).access_token;
 	user_token = (await authService.login(user_credentails)).access_token;
-	return { app, authService, admin_token, user_token };
+	return { app, authService, admin_token, user_token, propertyService };
 }
