@@ -18,10 +18,10 @@ import {
 } from "./interfaces/property.interface";
 
 @Table
-export class Property extends Model<
-	PropertyAttributes,
-	PropertyCreationAttributes
-> {
+export class Property
+	extends Model<PropertyAttributes, PropertyCreationAttributes>
+	implements PropertyCreationAttributes
+{
 	@PrimaryKey
 	@Column({
 		type: DataType.INTEGER,
@@ -73,7 +73,7 @@ export class Property extends Model<
 		type: DataType.STRING(500),
 		allowNull: true,
 	})
-	images: string[];
+	images: string;
 
 	@BelongsTo(() => User)
 	owner: User;
