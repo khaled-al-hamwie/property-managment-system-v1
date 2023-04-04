@@ -17,7 +17,6 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Express } from "express";
 import { IdParam } from "src/core/decorator/id.decorator";
 import { User } from "src/core/decorator/user.decorator";
-import { IdPipe } from "src/core/pipes/id.pipe";
 import { UserGuard } from "../auth/guard/user.guard";
 import { PropertyCreateDto } from "./dto/property.create.dto";
 import { PropertyUpdateDto } from "./dto/property.update.dto";
