@@ -45,13 +45,13 @@ export class PropertyController {
 
 	@UseGuards(UserGuard)
 	@Get("/me")
-	getMyProperties(
+	getAll(
 		@User("user_id") owner_id: number,
 		@Query("page", new DefaultValuePipe(5), ParseIntPipe) limit: number,
 		@Query("offset", new DefaultValuePipe(0), ParseIntPipe)
 		offset: number
 	) {
-		return this.propertyService.getMyProperties(owner_id, limit, offset);
+		return this.propertyService.getAll(owner_id, limit, offset);
 	}
 
 	@UseGuards(UserGuard)

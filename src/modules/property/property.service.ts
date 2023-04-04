@@ -26,11 +26,7 @@ export class PropertyService {
 		private PropertyType: PropertyTypesService,
 		private uploadService: UploadService
 	) {}
-	async getMyProperties(
-		owner_id: number,
-		limit: number = 5,
-		offset: number = 0
-	) {
+	async getAll(owner_id: number, limit: number = 5, offset: number = 0) {
 		if (limit <= 0 || offset < 0) {
 			throw new NotAcceptableException();
 		}
