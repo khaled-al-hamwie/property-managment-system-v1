@@ -80,7 +80,6 @@ export class PropertyService {
 			const image_name = this.uploadService.createName(
 				image.originalname.trim()
 			);
-			console.log(image_name);
 			try {
 				this.uploadService.upload(image.buffer, image_name);
 				await this.PropertyModule.create({
@@ -91,6 +90,9 @@ export class PropertyService {
 				throw new InternalServerErrorException();
 			}
 		}
+		await this.PropertyModule.create({
+			...property_attributes,
+		});
 		return "done";
 	}
 	async getProperty(
