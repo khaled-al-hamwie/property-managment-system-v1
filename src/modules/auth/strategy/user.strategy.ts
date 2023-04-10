@@ -17,7 +17,7 @@ export class UserStrategy extends PassportStrategy(Strategy, "user") {
 	}
 
 	async validate(payload: UserPayload) {
-		const user = await this.userService.findByUserId(payload.user_id);
+		const user = await this.userService.findById(payload.user_id);
 		if (!user) {
 			throw new UnauthorizedException();
 		}

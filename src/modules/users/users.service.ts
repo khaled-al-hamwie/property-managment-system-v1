@@ -25,7 +25,7 @@ export class UsersService {
 		return await this.UserModel.findOne({ where: { credential_id } });
 	}
 
-	async findByUserId(user_id: number): Promise<User> {
+	async findById(user_id: number): Promise<User> {
 		const user = await this.UserModel.findByPk(user_id);
 		return user;
 	}
