@@ -77,6 +77,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
 	@HasMany(() => Post, { onDelete: "CASCADE" })
 	posts: Post[];
 
-	@HasMany(() => Comment)
+	@HasMany(() => Comment, { onDelete: "CASCADE" })
 	comments: Comment[];
 }

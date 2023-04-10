@@ -13,6 +13,7 @@ import { RegisterAdminDto } from "./dto/register.admin.dto";
 import { RegisterUserDto } from "./dto/register.user.dto";
 import { AdminGuard } from "./guard/admin.guard";
 import { LocalAuthGuard } from "./guard/local-auth.guard";
+import { UserGuard } from "./guard/user.guard";
 import { JwtAttributes } from "./interfaces/jwt.interface";
 import { AdminPayload, UserPayload } from "./interfaces/payload.interface";
 
@@ -43,5 +44,10 @@ export class AuthController {
 	@Delete("/admin/profile")
 	async deleteAdmin(@User("admin_id") admin_id: AdminPayload["admin_id"]) {
 		return this.authService.deleteAdmin(admin_id);
+	}
+	@UseGuards(UserGuard)
+	@Delete("/profile")
+	async deleteUser(@User("user_id") user_id: UserPayload["user_id"]) {
+		return this.authService.deleteUser(user_id);
 	}
 }
