@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	HttpCode,
 	HttpStatus,
 	Post,
@@ -36,5 +37,11 @@ export class AuthController {
 	@Post("/admin/register")
 	async registerAdmin(@Body() body: RegisterAdminDto) {
 		return this.authService.registerAdmin(body);
+	}
+
+	@UseGuards(AdminGuard)
+	@Delete("/admin/profile")
+	async deleteAdmin(@User("admin_id") admin_id: AdminPayload["admin_id"]) {
+		return this.authService.deleteAdmin(admin_id);
 	}
 }

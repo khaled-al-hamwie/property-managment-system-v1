@@ -46,6 +46,9 @@ export class CredentialsService {
 		}
 	}
 
+	async findById(credential_id: number) {
+		return Credential.findByPk(credential_id);
+	}
 	async verefiyByUserName({
 		password,
 		user_name,

@@ -121,6 +121,15 @@ export class AuthService {
 		return this.signToken(payload);
 	}
 
+	async deleteAdmin(admin_id: number) {
+		const admin = await this.admin.findById(admin_id);
+		const credential_id = admin.credential_id;
+		const credential = await this.credential.findById(credential_id);
+		await admin.destroy();
+		await credential.destroy();
+		return "done";
+	}
+
 	async signToken(
 		payload: UserPayload | AdminPayload
 	): Promise<JwtAttributes> {

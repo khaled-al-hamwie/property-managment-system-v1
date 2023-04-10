@@ -57,6 +57,6 @@ export class Admin
 	})
 	phone_number: string;
 
-	@BelongsTo(() => Credential)
+	@BelongsTo(() => Credential, { onDelete: "CASCADE" })
 	credential: Credential;
 }
