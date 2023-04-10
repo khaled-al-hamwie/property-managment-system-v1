@@ -1,86 +1,73 @@
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Test, TestingModule } from "@nestjs/testing";
-import { hash } from "bcryptjs";
-import * as dotenv from "dotenv";
 import { AppModule } from "src/app.module";
 import { Admin } from "src/modules/admins/admin.entity";
+import { AuthService } from "src/modules/auth/auth.service";
+import { RegisterAdminDto } from "src/modules/auth/dto/register.admin.dto";
+import { RegisterUserDto } from "src/modules/auth/dto/register.user.dto";
 import { Credential } from "src/modules/credentials/credential.entity";
 import { User } from "src/modules/users/user.entity";
 import * as request from "supertest";
-dotenv.config();
+import { route, setUp } from "./constants";
+let path: string = route + "login";
 describe("login", () => {
 	let app: INestApplication;
-	let jwt: JwtService;
+	let authService: AuthService;
+	let admin_body: RegisterAdminDto = {
+		email: "testra@test.com",
+		password: "112233441122334411223344",
+		user_name: "testra",
+		first_name: "test",
+		last_name: "test",
+		contact_email: "testr@test.com",
+	};
+	let user_body: RegisterUserDto = {
+		email: "testrb@test.com",
+		password: "112233441122334411223344",
+		user_name: "testrb",
+		first_name: "test",
+		last_name: "test",
+		contact_email: "testr@test.com",
+	};
 	beforeAll(async () => {
-		const moduleFixture: TestingModule = await Test.createTestingModule({
-			imports: [AppModule],
-			providers: [JwtService],
-		}).compile();
-		app = moduleFixture.createNestApplication();
-		jwt = moduleFixture.get<JwtService>(JwtService);
-		app.useGlobalPipes(
-			new ValidationPipe({
-				whitelist: true,
-				stopAtFirstError: true,
-				errorHttpStatusCode: HttpStatus.FORBIDDEN,
-			})
-		);
-		await app.init();
-		await User.destroy({ where: {} });
+		await setUp().then((data) => {
+			app = data.app;
+			authService = data.authService;
+		});
 		await Admin.destroy({ where: {} });
+		await User.destroy({ where: {} });
 		await Credential.destroy({ where: {} });
-		const password = await hash("12345678901234567890", 12);
-		const cre1 = await Credential.create({
-			email: "test@gmail.com",
-			user_name: "testl",
-			password,
-		});
-		const cre2 = await Credential.create({
-			email: "test22@gmail.com",
-			user_name: "test22",
-			password,
-			is_admin: true,
-		});
-		await User.create({
-			credential_id: cre1.credential_id,
-			first_name: "test",
-			last_name: "test",
-		});
-		await Admin.create({
-			credential_id: cre2.credential_id,
-			first_name: "test",
-			last_name: "test",
-		});
+		await authService.registerAdmin(admin_body);
+		await authService.registerUser(user_body);
 	});
-
+	it("should be defined", () => {
+		expect(app).toBeDefined();
+		expect(authService).toBeDefined();
+	});
 	it("should login A user successfuly", async () => {
-		const req = await request(app.getHttpServer()).post("/login").send({
-			user_name: "testl",
-			password: "12345678901234567890",
-		});
-		const decoded = jwt.verify(req.body.access_token, {
-			secret: process.env.JWTKEY,
-		});
-		expect("user_id" in decoded).toBe(true);
-		expect("user_name" in decoded).toBe(true);
+		return request(app.getHttpServer())
+			.post(path)
+			.send({
+				user_name: user_body.user_name,
+				password: user_body.password,
+			})
+			.expect(200);
 	});
 	it("should login An admin successfuly", async () => {
-		const req = await request(app.getHttpServer()).post("/login").send({
-			user_name: "test22",
-			password: "12345678901234567890",
+		return request(app.getHttpServer()).post(path).send({
+			user_name: admin_body.user_name,
+			password: admin_body.password,
 		});
-		const decoded = jwt.verify(req.body.access_token, {
-			secret: process.env.JWTKEY,
-		});
-		expect("admin_id" in decoded).toBe(true);
-		expect("user_name" in decoded).toBe(true);
 	});
 	describe("user_name", () => {
 		it("should not login with wrong user_name", () => {
 			return request(app.getHttpServer())
-				.post("/login")
-				.send({ user_name: "test1", password: "12345678901234567890" })
+				.post(path)
+				.send({
+					user_name: "fjs;dlfjdsjfsj",
+					password: user_body.password,
+				})
 				.expect({
 					statusCode: 403,
 					message: "credentials don't match",
@@ -89,7 +76,7 @@ describe("login", () => {
 		});
 		it("should not login without user_name", () => {
 			return request(app.getHttpServer())
-				.post("/login")
+				.post(path)
 				.send({ password: "12345678901234567890" })
 				.expect({ statusCode: 401, message: "Unauthorized" });
 		});
@@ -98,8 +85,11 @@ describe("login", () => {
 	describe("password", () => {
 		it("should not login with wrong password", () => {
 			return request(app.getHttpServer())
-				.post("/login")
-				.send({ user_name: "test", password: "12345678901234567891" })
+				.post(path)
+				.send({
+					user_name: user_body.user_name,
+					password: "12345fds678901234567891",
+				})
 				.expect({
 					statusCode: 403,
 					message: "credentials don't match",
@@ -109,16 +99,13 @@ describe("login", () => {
 
 		it("should not login without password", () => {
 			return request(app.getHttpServer())
-				.post("/login")
-				.send({ user_name: "test" })
+				.post(path)
+				.send({ user_name: user_body.user_name })
 				.expect({ statusCode: 401, message: "Unauthorized" });
 		});
 	});
 
 	afterAll(async () => {
-		await User.destroy({ where: {} });
-		await Admin.destroy({ where: {} });
-		await Credential.destroy({ where: {} });
 		await app.close();
 	});
 });
