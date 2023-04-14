@@ -1,5 +1,3 @@
-// requirment admin and a token for that admin
-
 import { INestApplication } from "@nestjs/common";
 import { Admin } from "src/modules/admins/admin.entity";
 import { Credential } from "src/modules/credentials/credential.entity";
@@ -8,7 +6,6 @@ import * as request from "supertest";
 import { AuthService } from "../../src/modules/auth/auth.service";
 import { route, setUp } from "./constants";
 
-// need to test if admin id is returnd
 let admin_token: string;
 let path: string = route + "admin/profile";
 describe("delete admin", () => {
@@ -39,7 +36,7 @@ describe("delete admin", () => {
 		expect(authService).toBeDefined();
 	});
 
-	it("should", () => {
+	it("should be 200", () => {
 		return request(app.getHttpServer())
 			.delete(path)
 			.set({ Authorization: `Bearer ${admin_token}` })

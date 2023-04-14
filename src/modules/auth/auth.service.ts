@@ -131,9 +131,7 @@ export class AuthService {
 	}
 	async deleteUser(user_id: number) {
 		const user = await this.user.findById(user_id);
-		console.log(user);
 		const credential_id = user.credential_id;
-		console.log(credential_id);
 		const credential = await this.credential.findById(credential_id);
 		await user.destroy();
 		await credential.destroy();
