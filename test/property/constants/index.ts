@@ -1,22 +1,17 @@
 import { HttpStatus, INestApplication, ValidationPipe } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import { AppModule } from "src/app.module";
+import { Admin } from "src/modules/admins/admin.entity";
 import { AuthService } from "src/modules/auth/auth.service";
 import {
 	AdminPayload,
 	UserPayload,
 } from "src/modules/auth/interfaces/payload.interface";
+import { Credential } from "src/modules/credentials/credential.entity";
 import { PropertyService } from "src/modules/property/property.service";
+import { User } from "src/modules/users/user.entity";
 
 export const route = "/property";
-export const admin_credentails: AdminPayload = {
-	admin_id: 1,
-	user_name: "testseeder1",
-};
-export const user_credentails: UserPayload = {
-	user_id: 1,
-	user_name: "testseeder2",
-};
 
 export async function setUp() {
 	let app: INestApplication;
@@ -38,7 +33,28 @@ export async function setUp() {
 		})
 	);
 	await app.init();
-	admin_token = (await authService.login(admin_credentails)).access_token;
-	user_token = (await authService.login(user_credentails)).access_token;
+	await Admin.destroy({ where: {} });
+	await User.destroy({ where: {} });
+	await Credential.destroy({ where: {} });
+	user_token = (
+		await authService.registerUser({
+			email: "testra@test.com",
+			password: "112233441122334411223344",
+			user_name: "testra",
+			first_name: "test",
+			last_name: "test",
+			contact_email: "testr@test.com",
+		})
+	).access_token;
+	admin_token = (
+		await authService.registerAdmin({
+			email: "testrb@test.com",
+			password: "112233441122334411223344",
+			user_name: "testrb",
+			first_name: "test",
+			last_name: "test",
+			contact_email: "testr@test.com",
+		})
+	).access_token;
 	return { app, authService, admin_token, user_token, propertyService };
 }

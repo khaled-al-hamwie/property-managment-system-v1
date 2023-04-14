@@ -56,17 +56,26 @@ export class PropertyController {
 
 	@UseGuards(UserGuard)
 	@Patch(":id")
+	@UseInterceptors(FileInterceptor("image"))
 	updateProperty(
 		@User("user_id") owner_id: number,
 		@Body() body: PropertyUpdateDto,
 		@IdParam(ParseIntPipe)
-		property_id: number
+		property_id: number,
+		@UploadedFile(
+			new ParseFilePipeBuilder()
+				.addFileTypeValidator({ fileType: "image/jpeg" })
+				.addMaxSizeValidator({ maxSize: 10_000 })
+				.build({ errorHttpStatusCode: 403, fileIsRequired: false })
+		)
+		image: Express.Multer.File
 	) {
-		// return this.propertyService.updateProperty({
-		// 	...body,
-		// 	property_id,
-		// 	owner_id,
-		// });
+		return this.propertyService.updateProperty(
+			property_id,
+			owner_id,
+			body,
+			image
+		);
 	}
 
 	@UseGuards(UserGuard)

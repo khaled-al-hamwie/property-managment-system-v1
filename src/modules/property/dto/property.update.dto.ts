@@ -1,11 +1,5 @@
 import { Transform, TransformFnParams } from "class-transformer";
-import {
-	IsBoolean,
-	IsNotEmpty,
-	IsOptional,
-	IsString,
-	Length,
-} from "class-validator";
+import { IsBoolean, IsOptional, IsString, Length } from "class-validator";
 
 export class PropertyUpdateDto {
 	@IsOptional()
@@ -18,11 +12,11 @@ export class PropertyUpdateDto {
 		}
 	})
 	@Length(3, 45)
-	name: string;
+	name?: string;
 
 	@IsOptional()
 	@IsBoolean()
-	is_private: boolean;
+	is_private?: boolean;
 
 	@IsOptional()
 	@IsString()
@@ -34,8 +28,5 @@ export class PropertyUpdateDto {
 		}
 	})
 	@Length(10, 500)
-	description: string;
-
-	@IsOptional()
-	images: string[];
+	description?: string;
 }

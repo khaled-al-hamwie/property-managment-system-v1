@@ -13,8 +13,12 @@ import { PropertyType } from "../property-types/property-type.entity";
 import { PropertyTypesService } from "../property-types/property-types.service";
 import { UploadService } from "../upload/upload.service";
 import { PropertyCreateDto } from "./dto/property.create.dto";
+import { PropertyUpdateDto } from "./dto/property.update.dto";
 import { PropertyDelete } from "./interfaces/property.delete.interface";
-import { PropertyCreationAttributes } from "./interfaces/property.interface";
+import {
+	PropertyAttributes,
+	PropertyCreationAttributes,
+} from "./interfaces/property.interface";
 import { PropertyUpdate } from "./interfaces/property.update.interface";
 import { Property } from "./property.entity";
 
@@ -108,12 +112,36 @@ export class PropertyService {
 		}
 		return property;
 	}
-	async updateProperty(body: PropertyUpdate) {
-		const property = await this.PropertyModule.update(body, {
-			where: { property_id: body.property_id, owner_id: body.owner_id },
-			limit: 1,
-		});
-		if (property[0] == 0) throw new NotFoundException();
+	async updateProperty(
+		property_id: PropertyAttributes["property_id"],
+		owner_id: PropertyAttributes["owner_id"],
+		body: PropertyUpdateDto,
+		image: Express.Multer.File
+	) {
+		if (image) {
+			const image_name = this.uploadService.createName(
+				image.originalname.trim()
+			);
+			const property = await this.PropertyModule.update(
+				{ ...body, images: image_name },
+				{
+					where: { property_id, owner_id },
+					limit: 1,
+				}
+			);
+			if (property[0] == 0) throw new NotFoundException();
+			try {
+				this.uploadService.upload(image.buffer, image_name);
+			} catch (error) {
+				throw new InternalServerErrorException();
+			}
+		} else {
+			const property = await this.PropertyModule.update(body, {
+				where: { property_id, owner_id },
+				limit: 1,
+			});
+			if (property[0] == 0) throw new NotFoundException();
+		}
 		return "done";
 	}
 
