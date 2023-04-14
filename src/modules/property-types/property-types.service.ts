@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
+import PropertyTypeDto from "./dto/property-type.dto";
 import { PropertyType } from "./property-type.entity";
 
 @Injectable()
@@ -15,5 +16,15 @@ export class PropertyTypesService {
 			},
 			limit: 1,
 		});
+	}
+	async create(body: PropertyTypeDto) {
+		const propertyType = await this.PropertyTypeModel.findOne({
+			where: { name: body.name },
+		});
+		if (propertyType) {
+			throw new ConflictException();
+		}
+		await this.PropertyTypeModel.create(body);
+		return "done";
 	}
 }
