@@ -17,6 +17,9 @@ export class PropertyTypesService {
 			limit: 1,
 		});
 	}
+	async findAll(): Promise<PropertyType[]> {
+		return this.PropertyTypeModel.findAll();
+	}
 	async create(body: PropertyTypeDto) {
 		const propertyType = await this.PropertyTypeModel.findOne({
 			where: { name: body.name },
